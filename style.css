@@ -150,6 +150,30 @@ body {
     height: auto !important;
 }
 
+/* 载入更多按钮 */
+.aplayer-more {
+    display: none;
+    text-align: center;
+    padding: 12px 24px;
+    margin: 15px 0 0 0;
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    border: none;
+    box-sizing: border-box;
+}
+
+.aplayer-more:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
 /* 底部 */
 .footer {
     text-align: center;
