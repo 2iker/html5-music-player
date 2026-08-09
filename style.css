@@ -1,22 +1,22 @@
 /* j-main - 保持原样式 */
 .music-panel {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .music-back {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .result-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .result-field {
@@ -25,31 +25,32 @@
 
 .result-field .am-input-group {
     width: 100%;
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .result-field .am-input-group-label {
-    width: 38px;
-    min-width: 38px;
+    width: 32px;
+    min-width: 32px;
     text-align: center;
     background: transparent;
     border: none;
-    color: #3b82f6;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
 }
 
 .result-field .am-form-field {
-    height: 36px;
-    font-size: 13px;
+    height: 32px;
+    font-size: 12px;
     background: transparent;
     border: none;
-    color: #1e293b;
+    color: white;
 }
 
 /* APlayer - 保持默认样式 */
 .player-wrap {
-    margin-top: 24px;
+    margin-top: 20px;
 }
 
 #j-player .aplayer-list {
@@ -60,22 +61,16 @@
 /* 提示信息 */
 #notice {
     position: fixed;
-    bottom: 80px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 14px 28px;
-    background: #dc2626;
+    padding: 12px 24px;
+    background: rgba(239, 68, 68, 0.9);
+    backdrop-filter: blur(10px);
     color: white;
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: 10px;
+    font-size: 13px;
     z-index: 1000;
-    animation: slideUp 0.3s ease;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translate(-50%, 20px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 @media (max-width: 640px) {
