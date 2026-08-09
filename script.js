@@ -84,25 +84,9 @@ async function searchMusic() {
                 audio: playerList
             });
 
-            // 强制调整列表高度
-            function adjustListHeight() {
-                var list = $('.aplayer-list');
-                var ol = list.find('ol');
-                list.css('height', 'auto');
-                list.css('max-height', 'none');
-                list.css('overflow', 'visible');
-                ol.css('height', 'auto');
-                ol.css('max-height', 'none');
-            }
-            adjustListHeight();
-            setInterval(adjustListHeight, 500);
-
-            // 记录当前播放索引
-            var currentPlayIndex = 0;
-
             // 更新歌曲信息的函数
             function updateCurrentSongInfo() {
-                var index = player.playIndex;
+                var index = player.list.index;
                 if (index >= 0 && index < songsList.length) {
                     var song = songsList[index];
                     var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
@@ -118,23 +102,13 @@ async function searchMusic() {
                 }
             }
 
-            // 监听播放列表点击
-            $('#j-player').on('click', '.aplayer-list li', function() {
-                setTimeout(updateCurrentSongInfo, 100);
+            // 监听播放列表切换事件
+            player.on('listswitch', function() {
+                setTimeout(updateCurrentSongInfo, 50);
             });
 
-            // 监听歌曲切换
-            player.on('play', function() {
-                updateCurrentSongInfo();
-            });
-
-            player.on('timeupdate', function() {
-                var newIndex = player.playIndex;
-                if (newIndex !== currentPlayIndex) {
-                    currentPlayIndex = newIndex;
-                    updateCurrentSongInfo();
-                }
-            });
+            // 初始更新
+            updateCurrentSongInfo();
 
             // 添加载入更多按钮
             setTimeout(function() {
