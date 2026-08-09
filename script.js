@@ -42,7 +42,7 @@ async function searchMusic() {
     $('.music-submit').text('搜索中...').prop('disabled', true);
 
     try {
-        // 使用不同的API端点
+        // 使用cloudsearch接口（新版）
         var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(keyword) + '&limit=10&type=1';
         console.log('请求URL:', url);
 
@@ -52,20 +52,17 @@ async function searchMusic() {
         var data = await response.json();
         console.log('返回数据:', data);
 
-        // 尝试不同的数据结构
+        // 解析歌曲列表
         var songs = null;
-        if (data.result && data.result.songs) {
-            songs = data.result.songs;
-        } else if (data.body && data.body.result && data.body.result.songs) {
+        if (data.body && data.body.result && data.body.result.songs) {
             songs = data.body.result.songs;
-        } else if (data.data && data.data.songs) {
-            songs = data.data.songs;
+        } else if (data.result && data.result.songs) {
+            songs = data.result.songs;
         }
 
         if (songs && songs.length > 0) {
-            $('#searchForm').hide();
-            $('#resultForm').show();
-            playSong(songs[0]);
+            // 显示搜索结果列表
+            displayResults(songs);
         } else {
             alert('未找到相关歌曲，请换个关键词试试');
         }
@@ -74,6 +71,54 @@ async function searchMusic() {
         alert('搜索失败: ' + error.message);
     } finally {
         $('.music-submit').text('⚡ 一键搜索').prop('disabled', false);
+    }
+}
+
+// 显示搜索结果列表
+function displayResults(songs) {
+    var resultList = $('#resultList');
+    resultList.empty();
+
+    songs.forEach(function(song, index) {
+        var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+        var album = song.al ? song.al.name : '';
+        var html = '<div class="result-item" data-songid="' + song.id + '">' +
+            '<span class="index">' + (index + 1) + '</span>' +
+            '<div class="song-info">' +
+            '<h4>' + escapeHtml(song.name) + ' <span class="id">ID: ' + song.id + '</span></h4>' +
+            '<p>' + escapeHtml(artists) + (album ? ' - ' + escapeHtml(album) : '') + '</p>' +
+            '</div>' +
+            '<div class="actions">' +
+            '<button class="btn-play am-btn am-btn-primary am-btn-sm" onclick="playSongById(' + song.id + ')">播放</button>' +
+            '<button class="btn-copy am-btn am-btn-default am-btn-sm" onclick="copyUrl(\'http://music.163.com/song/media/outer/url?id=' + song.id + '.mp3\')">复制</button>' +
+            '</div>' +
+            '</div>';
+        resultList.append(html);
+    });
+
+    // 切换到结果页面
+    $('#searchForm').hide();
+    $('#resultForm').show();
+    $('#searchTabsContainer').hide();
+    $('#platformSelect').hide();
+}
+
+// 根据ID播放歌曲
+async function playSongById(id) {
+    try {
+        // 获取歌曲详情
+        var detailUrl = API_BASE + '/song/detail?ids=' + id;
+        var detailResponse = await fetch(detailUrl);
+        var detailData = await detailResponse.json();
+
+        if (detailData.code === 200 && detailData.songs && detailData.songs.length > 0) {
+            playSong(detailData.songs[0]);
+        } else {
+            alert('获取歌曲详情失败');
+        }
+    } catch (error) {
+        console.error('获取歌曲详情失败:', error);
+        alert('获取歌曲详情失败');
     }
 }
 
@@ -97,11 +142,9 @@ async function getSongUrl(id) {
 
 // 播放歌曲
 async function playSong(song) {
-    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : 
-                  (song.artists ? song.artists.map(function(a) { return a.name; }).join('/') : '未知');
-    var album = song.al ? song.al.name : (song.album ? song.album.name : '');
-    var picUrl = song.al && song.al.picUrl ? song.al.picUrl : 
-                 (song.album && song.album.picUrl ? song.album.picUrl : '');
+    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+    var album = song.al ? song.al.name : '';
+    var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
 
     // 获取播放链接
     var audioUrl = await getSongUrl(song.id);
@@ -138,6 +181,38 @@ async function playSong(song) {
             lrc: ''
         }]
     });
+
+    // 切换到播放界面
+    $('#resultListContainer').hide();
+    $('#playerContainer').show();
+}
+
+// 复制链接
+function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(function() {
+        alert('链接已复制！');
+    }).catch(function() {
+        var input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        alert('链接已复制！');
+    });
+}
+
+// HTML转义
+function escapeHtml(text) {
+    if (!text) return '';
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 // 支持回车键搜索

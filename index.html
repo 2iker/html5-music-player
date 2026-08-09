@@ -60,42 +60,55 @@
                     </button>
                 </form>
 
-                <form id="resultForm" class="am-form music-main music-panel result-panel" style="display:none;">
+                <div id="resultForm" class="am-form music-main music-panel result-panel" style="display:none;">
                     <button type="button" id="backBtn" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back">
                         ↩ 返回搜索
                     </button>
-                    <div class="result-grid">
-                        <div class="am-input-group am-input-group-sm result-field">
-                            <span class="am-input-group-label">🔗</span>
-                            <input id="linkInput" class="am-form-field" readonly>
-                            <span class="am-input-group-btn">
-                                <a id="linkBtn" class="am-btn am-btn-default" target="_blank">↗</a>
-                            </span>
+
+                    <div id="searchTabsContainer">
+                        <ul class="am-nav am-nav-pills am-nav-justify music-tabs">
+                            <li class="am-active"><a>搜索结果</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="resultListContainer">
+                        <div id="resultList" class="result-list"></div>
+                    </div>
+
+                    <div id="playerContainer" style="display:none;">
+                        <div class="result-grid">
+                            <div class="am-input-group am-input-group-sm result-field">
+                                <span class="am-input-group-label">🔗</span>
+                                <input id="linkInput" class="am-form-field" readonly>
+                                <span class="am-input-group-btn">
+                                    <a id="linkBtn" class="am-btn am-btn-default" target="_blank">↗</a>
+                                </span>
+                            </div>
+                            <div class="am-input-group am-input-group-sm result-field">
+                                <span class="am-input-group-label">🎵</span>
+                                <input id="srcInput" class="am-form-field" readonly>
+                                <span class="am-input-group-btn">
+                                    <a id="srcBtn" class="am-btn am-btn-default" target="_blank">⬇</a>
+                                </span>
+                            </div>
+                            <div class="am-input-group am-input-group-sm result-field">
+                                <span class="am-input-group-label">🆔</span>
+                                <input id="idInput" class="am-form-field" readonly>
+                            </div>
+                            <div class="am-input-group am-input-group-sm result-field">
+                                <span class="am-input-group-label">📝</span>
+                                <input id="nameInput" class="am-form-field" readonly>
+                            </div>
+                            <div class="am-input-group am-input-group-sm result-field">
+                                <span class="am-input-group-label">👤</span>
+                                <input id="authorInput" class="am-form-field" readonly>
+                            </div>
                         </div>
-                        <div class="am-input-group am-input-group-sm result-field">
-                            <span class="am-input-group-label">🎵</span>
-                            <input id="srcInput" class="am-form-field" readonly>
-                            <span class="am-input-group-btn">
-                                <a id="srcBtn" class="am-btn am-btn-default" target="_blank">⬇</a>
-                            </span>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field">
-                            <span class="am-input-group-label">🆔</span>
-                            <input id="idInput" class="am-form-field" readonly>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field">
-                            <span class="am-input-group-label">📝</span>
-                            <input id="nameInput" class="am-form-field" readonly>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field">
-                            <span class="am-input-group-label">👤</span>
-                            <input id="authorInput" class="am-form-field" readonly>
+                        <div class="player-wrap">
+                            <div id="aplayer"></div>
                         </div>
                     </div>
-                    <div class="player-wrap">
-                        <div id="aplayer"></div>
-                    </div>
-                </form>
+                </div>
             </main>
 
             <section class="music-tips">
