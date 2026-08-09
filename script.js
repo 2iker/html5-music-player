@@ -81,6 +81,7 @@ function createPlayer(songs) {
 
     // 监听歌曲切换
     player.on('listswitch', function(data) {
+        console.log('listswitch:', data.index);
         if (data.index >= 0 && data.index < songsList.length) {
             const song = songsList[data.index];
             const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
@@ -90,12 +91,29 @@ function createPlayer(songs) {
     });
 
     player.on('play', function() {
+        console.log('play event');
         const index = player.list.index;
         if (index >= 0 && index < songsList.length) {
             const song = songsList[index];
             const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
             const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
             updateSongInfo(song, artists, audioUrl);
+        }
+    });
+
+    // 备用：监听timeupdate
+    var lastPlayIndex = 0;
+    player.on('timeupdate', function() {
+        var currentIndex = player.list.index;
+        if (currentIndex !== lastPlayIndex) {
+            lastPlayIndex = currentIndex;
+            console.log('timeupdate index:', currentIndex);
+            if (currentIndex >= 0 && currentIndex < songsList.length) {
+                const song = songsList[currentIndex];
+                const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+                const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+                updateSongInfo(song, artists, audioUrl);
+            }
         }
     });
 
