@@ -133,7 +133,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2px 8px;
-    margin: 8px 0;
+    margin: 12px 0;
 }
 
 .result-field {
