@@ -13,7 +13,7 @@ let noMore = false;
 async function searchMusic() {
     searchKeyword = document.getElementById('searchInput').value.trim();
     if (!searchKeyword) {
-        alert('请输入搜索内容');
+        showNotice('请输入搜索内容');
         return;
     }
 
@@ -39,11 +39,11 @@ async function searchMusic() {
             noMore = false;
             document.getElementById('loadMoreBtn').textContent = '载入更多';
         } else {
-            alert('未找到相关歌曲');
+            showNotice('未找到相关歌曲');
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        alert('搜索失败，请重试');
+        showNotice('搜索失败，请重试');
     } finally {
         searchBtn.textContent = '搜索';
         searchBtn.disabled = false;
@@ -243,7 +243,7 @@ function backToSearch() {
 async function searchMusic2() {
     searchKeyword = document.getElementById('searchInput2').value.trim();
     if (!searchKeyword) {
-        alert('请输入搜索内容');
+        showNotice('请输入搜索内容');
         return;
     }
 
@@ -267,11 +267,11 @@ async function searchMusic2() {
             noMore = false;
             document.getElementById('loadMoreBtn').textContent = '载入更多';
         } else {
-            alert('未找到相关歌曲');
+            showNotice('未找到相关歌曲');
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        alert('搜索失败，请重试');
+        showNotice('搜索失败，请重试');
     } finally {
         searchBtn.textContent = '搜索';
         searchBtn.disabled = false;
