@@ -1,10 +1,10 @@
 /* j-main - 保持原样式 */
 .music-panel {
     background: white;
-    border-radius: 15px;
-    padding: 25px;
+    border-radius: 16px;
+    padding: 24px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .music-back {
@@ -24,19 +24,26 @@
 
 .result-field .am-input-group {
     width: 100%;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: none;
 }
 
 .result-field .am-input-group-label {
-    width: 35px;
-    min-width: 35px;
+    width: 36px;
+    min-width: 36px;
     text-align: center;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: transparent;
+    border: none;
+    color: #667eea;
 }
 
 .result-field .am-form-field {
-    height: 32px;
+    height: 34px;
     font-size: 13px;
+    background: transparent;
+    border: none;
+    color: #333;
 }
 
 /* APlayer - 保持默认样式 */
@@ -47,4 +54,30 @@
 #j-player .aplayer-list {
     max-height: none !important;
     height: auto !important;
+}
+
+/* 提示信息 */
+#notice {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: rgba(239, 68, 68, 0.95);
+    color: white;
+    border-radius: 10px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
 }
