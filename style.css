@@ -39,9 +39,10 @@ h3 {
 .search-wrap {
     width: 500px;
     max-width: 100%;
-    margin: 30px 0;
+    margin: 20px 0;
     display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
 .search-input {
@@ -78,20 +79,7 @@ h3 {
 .player-section {
     width: 600px;
     max-width: 100%;
-    margin: 10px 0;
-}
-
-.back-btn {
-    display: inline-block;
-    margin-bottom: 15px;
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s;
-}
-
-.back-btn:hover {
-    color: #333;
+    margin: 0 auto;
 }
 
 /* j-main - 保持原样式 */
@@ -163,28 +151,6 @@ h3 {
 }
 
 .load-more-btn:hover {
-    border-color: #42b983;
-    color: #42b983;
-}
-
-/* 底部按钮 */
-.landing-buttons {
-    margin-top: 20px;
-}
-
-.landing-button {
-    border: 1px solid #ccc;
-    border-radius: 33px;
-    padding: 10px 30px;
-    background-color: white;
-    display: inline-block;
-    margin-right: 20px;
-    color: #333;
-    text-decoration: none;
-    transition: all 0.3s;
-}
-
-.landing-button:hover {
     border-color: #42b983;
     color: #42b983;
 }
