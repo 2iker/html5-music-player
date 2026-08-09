@@ -130,6 +130,37 @@ h1 {
     margin-bottom: 16px;
 }
 
+/* GitHub 链接 */
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 16px;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: #9aa0a6;
+    background: #23272a;
+    border: 1px solid #2f3338;
+    border-radius: 24px;
+    text-decoration: none;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.github-link:hover {
+    color: #ffffff;
+    background: #2e3439;
+    border-color: #4a5568;
+}
+
+.github-link svg {
+    flex-shrink: 0;
+}
+
+.github-link.hidden {
+    display: none;
+}
+
 /* j-main - 深色和谐配色 */
 .music-panel {
     background: #23272a;
