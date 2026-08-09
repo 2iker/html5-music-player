@@ -6,8 +6,8 @@
 
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #2d2d2d;
-    color: #fff;
+    background: #191a1c;
+    color: #e8eaed;
     min-height: 100vh;
 }
 
@@ -24,17 +24,19 @@ body {
 .logo-icon {
     font-size: 48px;
     margin-bottom: 20px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
 }
 
 h1 {
     font-size: 28px;
     font-weight: 600;
-    color: #fff;
+    color: #f2f4f6;
     margin-bottom: 8px;
+    letter-spacing: .5px;
 }
 
 .subtitle {
-    color: #999;
+    color: #9aa0a6;
     font-size: 14px;
     margin-bottom: 40px;
 }
@@ -50,37 +52,42 @@ h1 {
 .search-input {
     flex: 1;
     padding: 14px 20px;
-    border: 1px solid #444;
+    border: 1px solid #2f3338;
     border-right: none;
     border-radius: 24px 0 0 24px;
     font-size: 15px;
-    background: #3a3a3a;
-    color: #fff;
+    background: #23272a;
+    color: #e8eaed;
     outline: none;
+    transition: border-color .2s ease, background .2s ease;
 }
 
 .search-input::placeholder {
-    color: #888;
+    color: #6f767d;
 }
 
 .search-input:focus {
-    border-color: #666;
+    border-color: #4a5568;
+    background: #262b2f;
 }
 
 .search-btn {
     padding: 14px 24px;
-    background: #fff;
-    border: none;
+    background: #23272a;
+    border: 1px solid #2f3338;
+    border-left: none;
     border-radius: 0 24px 24px 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
+    color: #e8eaed;
+    transition: background .2s ease, color .2s ease;
 }
 
 .search-btn:hover {
-    background: #f0f0f0;
+    background: #2e3439;
+    color: #ffffff;
 }
 
 /* 结果区域 */
@@ -91,10 +98,12 @@ h1 {
 
 /* j-main - 深色和谐配色 */
 .music-panel {
-    background: #3a3a3a;
+    background: #23272a;
+    border: 1px solid #2b3035;
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .28);
 }
 
 .result-grid {
@@ -110,21 +119,26 @@ h1 {
 
 .result-field .am-input-group {
     width: 100%;
-    background: #2d2d2d;
-    border: 1px solid #808080;
+    background: #191a1c;
+    border: 1px solid #3a3f44;
     border-radius: 8px;
+    transition: border-color .2s ease;
+}
+
+.result-field .am-input-group:hover {
+    border-color: #4a5568;
 }
 
 .result-field .am-input-group-label {
     background: transparent;
     border: none;
-    color: #a8a8a8;
+    color: #8b9096;
 }
 
 .result-field .am-form-field {
     background: transparent;
     border: none;
-    color: #f5f5f5;
+    color: #e8eaed;
     font-size: 13px;
 }
 
@@ -135,12 +149,12 @@ h1 {
 .result-field .am-input-group-btn .am-btn {
     background: transparent;
     border: none;
-    color: #a8a8a8;
+    color: #8b9096;
 }
 
 .result-field .am-input-group-btn .am-btn:hover {
     color: #fff;
-    background: #444;
+    background: #2e3439;
 }
 
 /* APlayer - 深色和谐配色 */
@@ -154,18 +168,18 @@ h1 {
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
-    background: #3a3a3a;
+    background: #23272a;
     box-shadow: none;
 }
 
 .player-wrap .aplayer,
 .player-wrap .aplayer-info {
-    background-color: #3a3a3a;
+    background-color: #23272a;
 }
 
 .player-wrap .aplayer .aplayer-title,
 .player-wrap .aplayer-list ol li {
-    color: #f5f5f5;
+    color: #e8eaed;
 }
 .player-wrap .aplayer .aplayer-lrc:before,
 .player-wrap .aplayer .aplayer-lrc:after {
@@ -175,38 +189,42 @@ h1 {
     border-bottom: none;
 }
 .player-wrap .aplayer-list ol li {
-    border-top-color: #4a4a4a;
+    border-top-color: #2b3035;
 }
 
 .player-wrap .aplayer .aplayer-author,
 .player-wrap .aplayer .aplayer-time {
-    color: #a8a8a8;
+    color: #9aa0a6;
 }
 
 .player-wrap .aplayer-list {
-    background-color: #333;
-    border-top: 1px solid #4a4a4a;
+    background-color: #1e2124;
+    border-top: 1px solid #2b3035;
 }
 
 .player-wrap .aplayer-list ol li {
-    border-bottom-color: #444;
+    border-bottom-color: #262a2e;
+}
+
+.player-wrap .aplayer-list ol li:hover {
+    background-color: #262a2e;
 }
 
 .player-wrap .aplayer-list ol li.aplayer-list-light {
-    background-color: #454545;
+    background-color: #2b3035;
 }
 
 .player-wrap .aplayer-lrc-contents p {
-    color: #a8a8a8;
+    color: #9aa0a6;
 }
 
 .player-wrap .aplayer-lrc-contents p.aplayer-lrc-current {
-    color: #f5f5f5;
+    color: #e8eaed;
 }
 
 .player-wrap .aplayer-list ol {
     scrollbar-width: thin;
-    scrollbar-color: #555 #333;
+    scrollbar-color: #3a3f44 #1e2124;
 }
 
 .player-wrap .aplayer-list ol::-webkit-scrollbar {
@@ -214,8 +232,12 @@ h1 {
 }
 
 .player-wrap .aplayer-list ol::-webkit-scrollbar-thumb {
-    background: #555;
+    background: #3a3f44;
     border-radius: 3px;
+}
+
+.player-wrap .aplayer-list ol::-webkit-scrollbar-thumb:hover {
+    background: #4a5568;
 }
 
 /* 载入更多按钮 */
@@ -223,18 +245,18 @@ h1 {
     width: 100%;
     padding: 14px;
     margin-top: 16px;
-    border: 1px solid #444;
+    border: 1px solid #2f3338;
     border-radius: 12px;
-    background: #3a3a3a;
-    color: #fff;
+    background: #23272a;
+    color: #e8eaed;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background .2s ease, border-color .2s ease;
 }
 
 .load-more-btn:hover {
-    background: #444;
-    border-color: #555;
+    background: #2e3439;
+    border-color: #4a5568;
 }
 
 /* 提示信息 */
@@ -244,11 +266,12 @@ h1 {
     left: 50%;
     transform: translateX(-50%);
     padding: 12px 24px;
-    background: #d32f2f;
+    background: #e5484d;
     color: white;
     border-radius: 8px;
     font-size: 14px;
     z-index: 1000;
+    box-shadow: 0 8px 30px rgba(229, 72, 77, .3);
 }
 
 @media (max-width: 640px) {
@@ -257,11 +280,12 @@ h1 {
     }
     .search-input {
         border-radius: 24px;
-        border-right: 1px solid #444;
+        border-right: 1px solid #2f3338;
     }
     .search-btn {
         border-radius: 24px;
         margin-top: 8px;
+        border-left: 1px solid #2f3338;
     }
     .result-grid {
         grid-template-columns: 1fr;

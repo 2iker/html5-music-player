@@ -1,4 +1,4 @@
-// API配置
+﻿// API配置
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
 let player = null;
@@ -73,7 +73,7 @@ function createPlayer(songs) {
         mutex: true,
         preload: 'auto',
         volume: 0.7,
-        theme: '#7f9cbf',
+        theme: '#7f8c9d',
         listmaxheight: 9999,
         audio: playerList
     });
