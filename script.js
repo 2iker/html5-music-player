@@ -142,6 +142,7 @@ async function loadMore() {
 
     // 保存当前滚动位置
     var scrollPos = $('.aplayer-list').scrollTop();
+    var playerHeight = $('.aplayer-list').height();
 
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
@@ -170,10 +171,17 @@ async function loadMore() {
                 audio: allAudio
             });
 
-            // 恢复滚动位置
-            setTimeout(function() {
-                $('.aplayer-list').scrollTop(scrollPos);
-            }, 100);
+            // 使用多次尝试恢复滚动位置
+            var restoreScroll = function() {
+                var list = $('.aplayer-list');
+                if (list.length && list[0].scrollHeight > playerHeight) {
+                    list.scrollTop(scrollPos);
+                }
+            };
+
+            setTimeout(restoreScroll, 50);
+            setTimeout(restoreScroll, 150);
+            setTimeout(restoreScroll, 300);
 
             // 更新按钮状态
             if (data.length < 10) {
