@@ -2,19 +2,19 @@
 const platforms = {
     netease: {
         name: '网易云音乐',
-        api: 'https://api.lolimi.cn/API/wydg/'
+        api: 'https://api.paugram.com/netease/?name='
     },
     qq: {
         name: 'QQ音乐',
-        api: 'https://api.lolimi.cn/API/qqdg/'
+        api: 'https://api.paugram.com/qq/?name='
     },
     kugou: {
         name: '酷狗音乐',
-        api: 'https://api.lolimi.cn/API/kgdg/'
+        api: 'https://api.paugram.com/kugou/?name='
     },
     kuwo: {
         name: '酷我音乐',
-        api: 'https://api.lolimi.cn/API/kwdg/'
+        api: 'https://api.paugram.com/kuwo/?name='
     }
 };
 
@@ -44,20 +44,66 @@ async function searchMusic() {
 
     try {
         const platform = platforms[currentPlatform];
-        const url = `${platform.api}?msg=${encodeURIComponent(keyword)}&n=10`;
+        const url = `${platform.api}${encodeURIComponent(keyword)}`;
 
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.code === 200 && data.data) {
+        if (data && data.data && data.data.length > 0) {
             displayResults(data.data);
+        } else if (Array.isArray(data) && data.length > 0) {
+            displayResults(data);
         } else {
             resultList.innerHTML = '<div class="empty">未找到相关歌曲</div>';
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        resultList.innerHTML = '<div class="error">搜索失败，请重试</div>';
+        // 尝试备用API
+        tryBackupAPI(keyword);
     }
+}
+
+// 备用API
+async function tryBackupAPI(keyword) {
+    const resultList = document.getElementById('resultList');
+
+    const backupApis = [
+        `https://api.injahow.cn/meting/?type=search&id=${encodeURIComponent(keyword)}`,
+        `https://api.lolimi.cn/API/wydg/?msg=${encodeURIComponent(keyword)}&n=10`
+    ];
+
+    for (const api of backupApis) {
+        try {
+            const response = await fetch(api);
+            const data = await response.json();
+
+            let songs = [];
+            if (Array.isArray(data)) {
+                songs = data.slice(0, 10).map(item => ({
+                    name: item.name || item.title,
+                    artist: item.artist || item.author || item.ar?.[0]?.name,
+                    url: item.url,
+                    id: item.id
+                }));
+            } else if (data.data && Array.isArray(data.data)) {
+                songs = data.data.slice(0, 10).map(item => ({
+                    name: item.name,
+                    artist: item.artist,
+                    url: item.url,
+                    id: item.id
+                }));
+            }
+
+            if (songs.length > 0 && songs[0].url) {
+                displayResults(songs);
+                return;
+            }
+        } catch (e) {
+            continue;
+        }
+    }
+
+    resultList.innerHTML = '<div class="error">搜索失败，请稍后重试</div>';
 }
 
 // 显示搜索结果
@@ -73,13 +119,15 @@ function displayResults(songs) {
         <div class="result-item">
             <span class="index">${index + 1}</span>
             <div class="song-info">
-                <h4>${escapeHtml(song.name)} <span class="id">ID: ${song.id}</span></h4>
-                <p>${escapeHtml(song.artist)} ${song.album ? '- ' + escapeHtml(song.album) : ''}</p>
+                <h4>${escapeHtml(song.name)} <span class="id">ID: ${song.id || '-'}</span></h4>
+                <p>${escapeHtml(song.artist || '未知歌手')}</p>
             </div>
             <div class="actions">
-                <button class="btn-play" onclick="playSong('${song.url}', '${escapeHtml(song.name)}', '${escapeHtml(song.artist)}')">播放</button>
-                <a class="btn-download" href="${song.url}" download="${escapeHtml(song.name)} - ${escapeHtml(song.artist)}.mp3">下载</a>
-                <button class="btn-copy" onclick="copyUrl('${song.url}')">复制</button>
+                ${song.url ? `
+                    <button class="btn-play" onclick="playSong('${song.url}', '${escapeHtml(song.name)}', '${escapeHtml(song.artist)}')">播放</button>
+                    <a class="btn-download" href="${song.url}" download="${escapeHtml(song.name)} - ${escapeHtml(song.artist)}.mp3">下载</a>
+                    <button class="btn-copy" onclick="copyUrl('${song.url}')">复制</button>
+                ` : '<span class="no-url">暂无链接</span>'}
             </div>
         </div>
     `).join('');
@@ -115,7 +163,6 @@ function copyUrl(url) {
     navigator.clipboard.writeText(url).then(() => {
         alert('链接已复制！');
     }).catch(() => {
-        // 降级方案
         const input = document.createElement('input');
         input.value = url;
         document.body.appendChild(input);
