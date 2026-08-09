@@ -93,7 +93,7 @@ h1 {
 .music-panel {
     background: #3a3a3a;
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     margin-bottom: 16px;
 }
 
@@ -110,9 +110,9 @@ h1 {
 
 .result-field .am-input-group {
     width: 100%;
-    background: #2d2d2d !important;
+    background: #2d2d2d;
     border-radius: 8px;
-    border: 1px solid #444 !important;
+    border: 1px solid #444;
 }
 
 .result-field .am-input-group-label {
@@ -132,19 +132,15 @@ h1 {
     color: #fff;
 }
 
-/* APlayer - 保持默认样式 */
+/* APlayer - 深色主题 */
 .player-wrap {
     margin-top: 20px;
 }
 
-#j-player .aplayer-list {
-    max-height: none !important;
-    height: auto !important;
-}
-
-/* APlayer黑夜模式 */
 #j-player .aplayer {
     background-color: #3a3a3a !important;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 #j-player .aplayer-info {
@@ -153,19 +149,25 @@ h1 {
 
 #j-player .aplayer-list {
     background-color: #2d2d2d !important;
+    max-height: none !important;
+    height: auto !important;
 }
 
 #j-player .aplayer-list ol li {
     border-bottom-color: #444 !important;
+    color: #fff !important;
 }
 
 #j-player .aplayer-list ol li.aplayer-list-light {
     background-color: #444 !important;
 }
 
-#j-player .aplayer-music .aplayer-title,
-#j-player .aplayer-music .aplayer-author {
+#j-player .aplayer-music .aplayer-title {
     color: #fff !important;
+}
+
+#j-player .aplayer-music .aplayer-author {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 #j-player .aplayer-lrc-contents p {
