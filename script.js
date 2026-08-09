@@ -1,66 +1,28 @@
-// 当前配置
-let currentTab = 'name';
-let currentPlatform = 'netease';
-
 // 平台配置
 const platforms = {
     netease: {
         name: '网易云音乐',
-        // 搜索API（需要后端代理，这里用外链方式）
-        searchUrl: (keyword) => `https://music.163.com/#/search/m/?s=${encodeURIComponent(keyword)}&type=1`,
-        getUrl: (id) => `http://music.163.com/song/media/outer/url?id=${id}.mp3`,
-        parseId: (input) => {
-            const match = input.match(/id=(\d+)/);
-            return match ? match[1] : input.trim();
-        }
+        color: '#c20c0c'
     },
     qq: {
         name: 'QQ音乐',
-        searchUrl: (keyword) => `https://y.qq.com/n/ryqq/search?w=${encodeURIComponent(keyword)}`,
-        getUrl: (id) => `http://dl.stream.qqmusic.qq.com/C400${id}.m4a?guid=365586308&vkey=&tag=from_newtplayer`,
-        parseId: (input) => {
-            const match = input.match(/\/([A-Za-z0-9]+)\.html/) || input.match(/song\/([A-Za-z0-9]+)/);
-            return match ? match[1] : input.trim();
-        }
+        color: '#31c27c'
     },
     kugou: {
         name: '酷狗音乐',
-        searchUrl: (keyword) => `https://www.kugou.com/yy/html/search.html#searchType=song&searchKeyWord=${encodeURIComponent(keyword)}`,
-        getUrl: (id) => `http://trackercdn.kugou.com/i/v2/?cmd=25&pid=1&behavior=play&hash=${id}`,
-        parseId: (input) => {
-            const match = input.match(/hash=([a-f0-9]+)/i);
-            return match ? match[1] : input.trim();
-        }
+        color: '#2ca2f5'
     },
     kuwo: {
         name: '酷我音乐',
-        searchUrl: (keyword) => `https://www.kuwo.cn/search/list?key=${encodeURIComponent(keyword)}`,
-        getUrl: (id) => `http://antiserver.kuwo.cn/anti.s?rid=MUSIC_${id}&response=res&format=mp3|aac&type=convert_url&br=320kmp3&agent=iPhone`,
-        parseId: (input) => {
-            const match = input.match(/id=(\d+)/) || input.match(/\/(\d+)/);
-            return match ? match[1] : input.trim();
-        }
+        color: '#ff6600'
     },
     migu: {
         name: '咪咕音乐',
-        searchUrl: (keyword) => `https://music.migu.cn/v3/music/search?keyword=${encodeURIComponent(keyword)}`,
-        getUrl: (id) => `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${id}&toneFlag=LQ`,
-        parseId: (input) => {
-            const match = input.match(/id=(\d+)/) || input.match(/song\/(\d+)/);
-            return match ? match[1] : input.trim();
-        }
+        color: '#ff3b21'
     }
 };
 
-// 标签切换
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        currentTab = this.dataset.tab;
-        updatePlaceholder();
-    });
-});
+let currentPlatform = 'netease';
 
 // 平台切换
 document.querySelectorAll('.tag').forEach(tag => {
@@ -68,114 +30,143 @@ document.querySelectorAll('.tag').forEach(tag => {
         document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
         currentPlatform = this.dataset.platform;
-        updatePlaceholder();
     });
 });
 
-// 更新输入框提示
-function updatePlaceholder() {
-    const input = document.getElementById('searchInput');
-    const hints = {
-        name: '请输入音乐名称',
-        id: '请输入音乐ID',
-        url: '请输入音乐链接'
-    };
-    input.placeholder = hints[currentTab];
-}
-
-// 填入示例
-function fillExample(text) {
-    document.getElementById('searchInput').value = text;
-    searchMusic();
-}
-
-// 搜索音乐
-function searchMusic() {
+// 搜索功能
+async function searchMusic() {
     const keyword = document.getElementById('searchInput').value.trim();
     if (!keyword) {
         alert('请输入搜索内容');
         return;
     }
 
-    const platform = platforms[currentPlatform];
+    const resultDiv = document.getElementById('result');
+    const resultList = document.getElementById('resultList');
+    resultDiv.classList.remove('hidden');
+    resultList.innerHTML = '<div class="loading">搜索中...</div>';
 
-    if (currentTab === 'name') {
-        // 名称搜索 - 跳转到对应平台搜索
-        window.open(platform.searchUrl(keyword), '_blank');
-    } else if (currentTab === 'id') {
-        // ID解析 - 直接解析
-        const songId = platform.parseId(keyword);
-        if (songId) {
-            playMusic(songId, '未知歌曲', '未知歌手', '');
-        } else {
-            alert('无法识别ID，请检查输入');
-        }
-    } else if (currentTab === 'url') {
-        // 链接解析
-        parseUrl(keyword);
+    try {
+        // 使用第三方音乐API
+        const results = await searchFromAPI(keyword, currentPlatform);
+        displayResults(results);
+    } catch (error) {
+        console.error('搜索失败:', error);
+        resultList.innerHTML = '<div class="error">搜索失败，请重试或更换平台</div>';
     }
 }
 
-// 解析链接
-function parseUrl(url) {
-    // 网易云
-    const neteaseMatch = url.match(/music\.163\.com.*id=(\d+)/);
-    if (neteaseMatch) {
-        currentPlatform = 'netease';
-        playMusic(neteaseMatch[1], '网易云音乐歌曲', '未知歌手', '');
-        return;
+// 调用API搜索
+async function searchFromAPI(keyword, platform) {
+    // 使用多个免费API源
+    const apis = [
+        `https://api.lolimi.cn/API/wydg/?msg=${encodeURIComponent(keyword)}&n=10`,
+        `https://api.lolimi.cn/API/qqdg/?msg=${encodeURIComponent(keyword)}&n=10`
+    ];
+
+    // 根据平台选择API
+    let url;
+    if (platform === 'netease') {
+        url = `https://api.lolimi.cn/API/wydg/?msg=${encodeURIComponent(keyword)}&n=10`;
+    } else if (platform === 'qq') {
+        url = `https://api.lolimi.cn/API/qqdg/?msg=${encodeURIComponent(keyword)}&n=10`;
+    } else {
+        // 其他平台使用网易云搜索
+        url = `https://api.lolimi.cn/API/wydg/?msg=${encodeURIComponent(keyword)}&n=10`;
     }
 
-    // QQ音乐
-    const qqMatch = url.match(/y\.qq\.com.*\/([A-Za-z0-9]+)\.html/);
-    if (qqMatch) {
-        currentPlatform = 'qq';
-        playMusic(qqMatch[1], 'QQ音乐歌曲', '未知歌手', '');
-        return;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // 转换为统一格式
+    if (data.code === 200 && data.data) {
+        return data.data.map(item => ({
+            id: item.id || item.songid,
+            name: item.name || item.songname,
+            artist: item.artist || item.singer,
+            album: item.album || '',
+            platform: platform
+        }));
     }
 
-    // 酷狗
-    const kugouMatch = url.match(/hash=([a-f0-9]+)/i);
-    if (kugouMatch) {
-        currentPlatform = 'kugou';
-        playMusic(kugouMatch[1], '酷狗音乐歌曲', '未知歌手', '');
-        return;
+    // 如果API返回格式不同，尝试解析
+    if (Array.isArray(data)) {
+        return data.map(item => ({
+            id: item.id,
+            name: item.name || item.title,
+            artist: item.artist || item.author,
+            album: item.album || '',
+            platform: platform
+        }));
     }
 
-    // 酷我
-    const kuwoMatch = url.match(/kuwo\.cn.*?(\d+)/);
-    if (kuwoMatch) {
-        currentPlatform = 'kuwo';
-        playMusic(kuwoMatch[1], '酷我音乐歌曲', '未知歌手', '');
-        return;
-    }
-
-    alert('无法识别链接，请检查输入');
+    return [];
 }
 
-// 播放音乐
-function playMusic(songId, title, artist, cover) {
+// 显示搜索结果
+function displayResults(results) {
+    const resultList = document.getElementById('resultList');
+
+    if (!results || results.length === 0) {
+        resultList.innerHTML = '<div class="empty">未找到相关歌曲</div>';
+        return;
+    }
+
+    resultList.innerHTML = results.map((song, index) => `
+        <div class="result-item" onclick="selectSong('${song.id}', '${escapeHtml(song.name)}', '${escapeHtml(song.artist)}', '${escapeHtml(song.album)}')">
+            <span class="index">${index + 1}</span>
+            <div class="song-info">
+                <h4>${escapeHtml(song.name)} <span class="id">ID: ${song.id}</span></h4>
+                <p>${escapeHtml(song.artist)} ${song.album ? '- ' + escapeHtml(song.album) : ''}</p>
+            </div>
+            <div class="actions">
+                <button class="btn-play" onclick="event.stopPropagation(); selectSong('${song.id}', '${escapeHtml(song.name)}', '${escapeHtml(song.artist)}', '${escapeHtml(song.album)}')">播放</button>
+                <button class="btn-download" onclick="event.stopPropagation(); downloadSong('${song.id}')">下载</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 选择歌曲播放
+function selectSong(id, name, artist, album) {
     const platform = platforms[currentPlatform];
-    const url = platform.getUrl(songId);
+
+    // 根据平台生成播放链接
+    let audioUrl;
+    if (currentPlatform === 'netease') {
+        audioUrl = `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    } else if (currentPlatform === 'qq') {
+        audioUrl = `http://dl.stream.qqmusic.qq.com/C400${id}.m4a?guid=365586308&vkey=&tag=from_newtplayer`;
+    } else if (currentPlatform === 'kuwo') {
+        audioUrl = `http://antiserver.kuwo.cn/anti.s?rid=MUSIC_${id}&response=res&format=mp3|aac&type=convert_url&br=320kmp3&agent=iPhone`;
+    } else {
+        audioUrl = `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    }
 
     // 显示播放器
     document.getElementById('playerSection').classList.remove('hidden');
-    document.getElementById('playerTitle').textContent = title;
-    document.getElementById('playerArtist').textContent = `${platform.name} - ID: ${songId}`;
-    document.getElementById('playerCover').src = cover || '';
+    document.getElementById('playerTitle').textContent = name;
+    document.getElementById('playerArtist').textContent = `${artist} - ${platform.name}`;
+    document.getElementById('playerCover').src = '';
 
     // 设置音频
     const audio = document.getElementById('audioPlayer');
-    audio.src = url;
+    audio.src = audioUrl;
 
     // 设置下载链接
-    document.getElementById('downloadBtn').href = url;
+    document.getElementById('downloadBtn').href = audioUrl;
+    document.getElementById('downloadBtn').download = `${name} - ${artist}.mp3`;
 
     // 设置分享链接
-    document.getElementById('shareLink').value = url;
+    document.getElementById('shareLink').value = audioUrl;
 
     // 滚动到播放器
     document.getElementById('playerSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 下载歌曲
+function downloadSong(id) {
+    selectSong(id, '下载歌曲', '', '');
 }
 
 // 复制链接
@@ -198,12 +189,22 @@ function clearResults() {
     document.getElementById('playerSection').classList.add('hidden');
 }
 
+// HTML转义
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 // 支持回车键搜索
 document.getElementById('searchInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         searchMusic();
     }
 });
-
-// 初始化
-updatePlaceholder();
