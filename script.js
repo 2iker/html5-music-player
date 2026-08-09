@@ -83,6 +83,19 @@ async function searchMusic() {
                 audio: playerList
             });
 
+            // 强制调整列表高度
+            function adjustListHeight() {
+                var list = $('.aplayer-list');
+                var ol = list.find('ol');
+                list.css('height', 'auto');
+                list.css('max-height', 'none');
+                list.css('overflow', 'visible');
+                ol.css('height', 'auto');
+                ol.css('max-height', 'none');
+            }
+            adjustListHeight();
+            setInterval(adjustListHeight, 500);
+
             // 记录当前播放索引
             var currentPlayIndex = 0;
 
