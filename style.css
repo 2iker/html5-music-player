@@ -284,37 +284,13 @@ main {
     display: none;
 }
 
-.player-info {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.player-info img {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    object-fit: cover;
-    background: #ddd;
-}
-
-.player-info .info {
-    flex: 1;
-}
-
-.player-info h3 {
+.player-section h3 {
     font-size: 18px;
     color: #333;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
-.player-info p {
-    color: #666;
-    font-size: 14px;
-}
-
-#audioPlayer {
-    width: 100%;
+#aplayer {
     margin-bottom: 20px;
 }
 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐搜索器 - 免费音乐下载</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
@@ -53,14 +54,8 @@
             </div>
 
             <div class="player-section hidden" id="playerSection">
-                <div class="player-info">
-                    <img id="playerCover" src="" alt="封面">
-                    <div class="info">
-                        <h3 id="playerTitle">-</h3>
-                        <p id="playerArtist">-</p>
-                    </div>
-                </div>
-                <audio id="audioPlayer" controls></audio>
+                <h3>正在播放</h3>
+                <div id="aplayer"></div>
                 <div class="player-actions">
                     <a id="downloadBtn" href="#" download class="btn-download">下载</a>
                     <button onclick="copyLink()" class="btn-copy">复制外链</button>
@@ -86,6 +81,7 @@
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

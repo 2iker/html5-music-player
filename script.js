@@ -2,6 +2,7 @@
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
 let currentPlatform = 'netease';
+let ap = null;
 
 // 平台切换
 document.querySelectorAll('.tag').forEach(tag => {
@@ -53,6 +54,7 @@ function displayResults(songs) {
     resultList.innerHTML = songs.map((song, index) => {
         const artists = song.artists ? song.artists.map(a => a.name).join('/') : '未知';
         const album = song.album ? song.album.name : '';
+        const picUrl = song.album && song.album.picUrl ? song.album.picUrl : '';
         return `
         <div class="result-item">
             <span class="index">${index + 1}</span>
@@ -61,7 +63,7 @@ function displayResults(songs) {
                 <p>${escapeHtml(artists)} ${album ? '- ' + escapeHtml(album) : ''}</p>
             </div>
             <div class="actions">
-                <button class="btn-play" onclick="playSong(${song.id}, '${escapeHtml(song.name)}', '${escapeHtml(artists)}')">播放</button>
+                <button class="btn-play" onclick='playSong(${JSON.stringify(song).replace(/'/g, "\\'")})'>播放</button>
                 <button class="btn-copy" onclick="copyUrl('http://music.163.com/song/media/outer/url?id=${song.id}.mp3')">复制</button>
             </div>
         </div>
@@ -79,7 +81,6 @@ async function getSongUrl(id) {
         if (data.code === 200 && data.data && data.data[0] && data.data[0].url) {
             return data.data[0].url;
         }
-        // 备用方案：使用外链
         return `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
     } catch (error) {
         console.error('获取播放链接失败:', error);
@@ -88,22 +89,43 @@ async function getSongUrl(id) {
 }
 
 // 播放歌曲
-async function playSong(id, name, artist) {
-    // 显示播放器
-    document.getElementById('playerSection').classList.remove('hidden');
-    document.getElementById('playerTitle').textContent = name;
-    document.getElementById('playerArtist').textContent = `${artist} - 网易云音乐`;
+async function playSong(song) {
+    const artists = song.artists ? song.artists.map(a => a.name).join('/') : '未知';
+    const album = song.album ? song.album.name : '';
+    const picUrl = song.album && song.album.picUrl ? song.album.picUrl : '';
 
     // 获取播放链接
-    const audioUrl = await getSongUrl(id);
+    const audioUrl = await getSongUrl(song.id);
 
-    // 设置音频
-    const audio = document.getElementById('audioPlayer');
-    audio.src = audioUrl;
+    // 显示播放器
+    document.getElementById('playerSection').classList.remove('hidden');
+
+    // 销毁旧的播放器
+    if (ap) {
+        ap.destroy();
+    }
+
+    // 创建APlayer
+    ap = new APlayer({
+        container: document.getElementById('aplayer'),
+        mini: false,
+        autoplay: true,
+        lrcType: 0,
+        mutex: true,
+        preload: 'auto',
+        volume: 0.7,
+        audio: [{
+            name: song.name,
+            artist: artists,
+            url: audioUrl,
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
+            lrc: ''
+        }]
+    });
 
     // 设置下载链接
     document.getElementById('downloadBtn').href = audioUrl;
-    document.getElementById('downloadBtn').download = `${name} - ${artist}.mp3`;
+    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
 
     // 设置分享链接
     document.getElementById('shareLink').value = audioUrl;
