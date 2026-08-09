@@ -150,18 +150,6 @@ body {
     margin-top: 20px;
 }
 
-/* 动态调整APlayer列表高度 */
-.aplayer .aplayer-list {
-    max-height: none !important;
-    height: auto !important;
-    overflow-y: auto;
-}
-
-.aplayer .aplayer-list ol {
-    max-height: none !important;
-    height: auto !important;
-}
-
 .aplayer-more {
     display: block;
     text-align: center;
