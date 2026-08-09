@@ -41,9 +41,9 @@ h1 {
 }
 
 .subtitle {
-    color: #9aa0a6;
+    color: #999;
     font-size: 14px;
-    margin: 0 0 40px;
+    margin-bottom: 16px;
 }
 
 /* 搜索框 */
