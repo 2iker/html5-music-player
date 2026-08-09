@@ -6,7 +6,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+    background: url('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920') center/cover no-repeat fixed;
     min-height: 100vh;
     color: #fff;
     -webkit-font-smoothing: antialiased;
@@ -15,7 +15,7 @@ body {
 /* 头部 */
 .header {
     text-align: center;
-    padding: 50px 20px 35px;
+    padding: 60px 20px 40px;
 }
 
 .logo {
@@ -33,14 +33,11 @@ body {
 .logo-text {
     font-size: 32px;
     font-weight: 700;
-    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #fff;
 }
 
 .tagline {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
 }
 
@@ -59,8 +56,10 @@ body {
 .search-box input {
     flex: 1;
     padding: 14px 20px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px;
     font-size: 15px;
     color: #fff;
@@ -69,18 +68,20 @@ body {
 
 .search-box input:focus {
     outline: none;
-    border-color: rgba(129, 140, 248, 0.5);
-    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .search-box input::placeholder {
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .search-box button {
     padding: 14px 24px;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 12px;
     color: #fff;
     cursor: pointer;
@@ -93,26 +94,31 @@ body {
 }
 
 .search-box button:hover {
+    background: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
-/* j-main - 保持原样式 */
+/* j-main - 毛玻璃效果 */
 #j-main {
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
 }
 
 .music-back {
     margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
 }
 
 .music-back:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 /* result-grid - 保持原样式 */
@@ -129,17 +135,29 @@ body {
 
 .result-field .am-input-group {
     width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
 }
 
 .result-field .am-input-group-label {
     width: 35px;
     min-width: 35px;
     text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .result-field .am-form-field {
     height: 32px;
     font-size: 13px;
+    background: transparent;
+    border: none;
+    color: #fff;
+}
+
+.result-field .am-form-field:focus {
+    outline: none;
 }
 
 /* APlayer - 保持默认样式 */
@@ -159,27 +177,28 @@ body {
     padding: 12px 24px;
     margin: 15px 0 0 0;
     width: 100%;
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
     transition: all 0.3s ease;
-    border: none;
 }
 
 .aplayer-more:hover {
+    background: rgba(255, 255, 255, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
 }
 
 /* 底部 */
 .footer {
     text-align: center;
     padding: 40px 20px;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 13px;
 }
 
@@ -206,7 +225,8 @@ body {
     }
 
     #j-main {
-        padding: 0 15px;
+        padding: 20px;
+        border-radius: 15px;
     }
 
     .result-grid {
