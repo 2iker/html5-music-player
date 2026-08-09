@@ -20,95 +20,71 @@
                         <p>CD级音质，让天下没有难搜的歌曲</p>
                     </div>
                 </div>
-                <div class="hero-badge">
-                    🎧 多平台搜索
-                </div>
+                <div class="hero-badge">🎧 多平台搜索</div>
             </header>
 
             <main class="music-layout">
-                <form id="searchForm" class="am-form music-panel search-panel">
-                    <ul id="searchTabs" class="am-nav am-nav-pills am-nav-justify music-tabs">
-                        <li class="am-active" data-filter="name">
-                            <a>音乐名称</a>
-                        </li>
-                        <li data-filter="id">
-                            <a>音乐 ID</a>
-                        </li>
-                        <li data-filter="url">
-                            <a>音乐地址</a>
-                        </li>
+                <!-- 搜索表单 -->
+                <form id="j-validator" class="am-form music-panel search-panel">
+                    <ul id="j-nav" class="am-nav am-nav-pills am-nav-justify music-tabs">
+                        <li class="am-active" data-filter="name"><a>音乐名称</a></li>
+                        <li data-filter="id"><a>音乐 ID</a></li>
+                        <li data-filter="url"><a>音乐地址</a></li>
                     </ul>
                     <div class="am-form-group search-field">
-                        <input id="searchInput" class="am-form-field am-input-lg am-radius" placeholder="例如: 周杰伦 晴天" required>
+                        <input id="j-input" class="am-form-field am-input-lg am-radius" placeholder="例如: 不要说话 陈奕迅" required>
                     </div>
-                    <div id="platformSelect" class="am-form-group music-type">
-                        <label class="am-radio-inline">
-                            <input type="radio" name="music_type" value="netease" checked> 网易
-                        </label>
-                        <label class="am-radio-inline">
-                            <input type="radio" name="music_type" value="qq"> QQ
-                        </label>
-                        <label class="am-radio-inline">
-                            <input type="radio" name="music_type" value="kugou"> 酷狗
-                        </label>
-                        <label class="am-radio-inline">
-                            <input type="radio" name="music_type" value="kuwo"> 酷我
-                        </label>
+                    <div id="j-type" class="am-form-group music-type">
+                        <label class="am-radio-inline"><input type="radio" name="music_type" value="netease" checked> 网易</label>
+                        <label class="am-radio-inline"><input type="radio" name="music_type" value="qq"> QQ</label>
+                        <label class="am-radio-inline"><input type="radio" name="music_type" value="kugou"> 酷狗</label>
+                        <label class="am-radio-inline"><input type="radio" name="music_type" value="kuwo"> 酷我</label>
                     </div>
-                    <button type="submit" class="am-btn am-btn-primary am-btn-lg am-btn-block am-radius music-submit">
-                        ⚡ 一键搜索
-                    </button>
+                    <button id="j-submit" type="submit" class="am-btn am-btn-primary am-btn-lg am-btn-block am-radius music-submit">⚡ 一键搜索</button>
                 </form>
 
-                <div id="resultForm" class="am-form music-main music-panel result-panel" style="display:none;">
-                    <button type="button" id="backBtn" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back">
-                        ↩ 返回搜索
-                    </button>
-
-                    <div id="searchTabsContainer">
-                        <ul class="am-nav am-nav-pills am-nav-justify music-tabs">
-                            <li class="am-active"><a>搜索结果</a></li>
-                        </ul>
-                    </div>
-
-                    <div id="resultListContainer">
-                        <div id="resultList" class="result-list"></div>
-                    </div>
-
-                    <div id="playerContainer" style="display:none;">
-                        <div class="result-grid">
-                            <div class="am-input-group am-input-group-sm result-field">
-                                <span class="am-input-group-label">🔗</span>
-                                <input id="linkInput" class="am-form-field" readonly>
-                                <span class="am-input-group-btn">
-                                    <a id="linkBtn" class="am-btn am-btn-default" target="_blank">↗</a>
-                                </span>
-                            </div>
-                            <div class="am-input-group am-input-group-sm result-field">
-                                <span class="am-input-group-label">🎵</span>
-                                <input id="srcInput" class="am-form-field" readonly>
-                                <span class="am-input-group-btn">
-                                    <a id="srcBtn" class="am-btn am-btn-default" target="_blank">⬇</a>
-                                </span>
-                            </div>
-                            <div class="am-input-group am-input-group-sm result-field">
-                                <span class="am-input-group-label">🆔</span>
-                                <input id="idInput" class="am-form-field" readonly>
-                            </div>
-                            <div class="am-input-group am-input-group-sm result-field">
-                                <span class="am-input-group-label">📝</span>
-                                <input id="nameInput" class="am-form-field" readonly>
-                            </div>
-                            <div class="am-input-group am-input-group-sm result-field">
-                                <span class="am-input-group-label">👤</span>
-                                <input id="authorInput" class="am-form-field" readonly>
-                            </div>
+                <!-- 结果表单 -->
+                <form id="j-main" class="am-form music-main music-panel result-panel" style="display:none;">
+                    <a id="j-back" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back">↩ 返回搜索</a>
+                    <div class="result-grid">
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
+                            <input id="j-link" class="am-form-field" readonly>
+                            <span class="am-input-group-btn">
+                                <a id="j-link-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-external-link"></i></a>
+                            </span>
                         </div>
-                        <div class="player-wrap">
-                            <div id="aplayer"></div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-music am-icon-fw"></i></span>
+                            <input id="j-src" class="am-form-field" readonly>
+                            <span class="am-input-group-btn">
+                                <a id="j-src-btn" class="am-btn am-btn-default" target="_blank" rel="noreferrer"><i class="am-icon-download"></i></a>
+                            </span>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-list-ol am-icon-fw"></i></span>
+                            <input id="j-songid" class="am-form-field" readonly>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-file-text-o am-icon-fw"></i></span>
+                            <input id="j-lrc" class="am-form-field" readonly>
+                            <span class="am-input-group-btn">
+                                <a id="j-lrc-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-download"></i></a>
+                            </span>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-tag am-icon-fw"></i></span>
+                            <input id="j-name" class="am-form-field" readonly>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+                            <input id="j-author" class="am-form-field" readonly>
                         </div>
                     </div>
-                </div>
+                    <div id="j-show" class="player-wrap">
+                        <div id="j-player" class="aplayer"></div>
+                    </div>
+                </form>
             </main>
 
             <section class="music-tips">
