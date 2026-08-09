@@ -129,7 +129,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    margin-bottom: 16px;
+    margin: 12px 0;
 }
 
 .result-field {
@@ -153,7 +153,12 @@ h1 {
 .result-field .am-input-group-label {
     background: transparent;
     border: none;
+    border-right: 1px solid #4a5568;
     color: #8b9096;
+    height: auto;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: normal;
 }
 
 .result-field .am-form-field {
@@ -161,16 +166,27 @@ h1 {
     border: none;
     color: #e8eaed;
     font-size: 13px;
+    height: auto;
+    line-height: normal;
+    padding: 6px 10px;
 }
 
 .result-field .am-form-field:focus {
     outline: none;
 }
 
+.result-field .am-input-group-btn {
+    border-left: 1px solid #4a5568;
+}
+
 .result-field .am-input-group-btn .am-btn {
     background: transparent;
     border: none;
     color: #8b9096;
+    height: auto;
+    padding: 6px 10px;
+    font-size: 14px;
+    line-height: 1;
 }
 
 .result-field .am-input-group-btn .am-btn:hover {
