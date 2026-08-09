@@ -26,9 +26,7 @@ async function searchMusic() {
     resultList.innerHTML = '<div class="loading">搜索中...</div>';
 
     try {
-        // 使用网易云音乐API搜索
         const url = `${API_BASE}/search?keywords=${encodeURIComponent(keyword)}&limit=10`;
-
         const response = await fetch(url);
         const data = await response.json();
 
@@ -71,6 +69,24 @@ function displayResults(songs) {
     }).join('');
 }
 
+// 获取歌曲播放链接
+async function getSongUrl(id) {
+    try {
+        const url = `${API_BASE}/song/url/v1?id=${id}&level=exhigh`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.code === 200 && data.data && data.data[0] && data.data[0].url) {
+            return data.data[0].url;
+        }
+        // 备用方案：使用外链
+        return `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    } catch (error) {
+        console.error('获取播放链接失败:', error);
+        return `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    }
+}
+
 // 播放歌曲
 async function playSong(id, name, artist) {
     // 显示播放器
@@ -78,8 +94,8 @@ async function playSong(id, name, artist) {
     document.getElementById('playerTitle').textContent = name;
     document.getElementById('playerArtist').textContent = `${artist} - 网易云音乐`;
 
-    // 获取歌曲播放链接
-    const audioUrl = `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    // 获取播放链接
+    const audioUrl = await getSongUrl(id);
 
     // 设置音频
     const audio = document.getElementById('audioPlayer');
