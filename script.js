@@ -120,6 +120,29 @@ function updateSongInfo(song, artists, audioUrl) {
     document.getElementById('j-songid').value = song.id;
     document.getElementById('j-name').value = song.name;
     document.getElementById('j-author').value = artists;
+    
+    // 获取歌词
+    getLyric(song.id);
+}
+
+// 获取歌词
+async function getLyric(id) {
+    try {
+        const response = await fetch(`${API_BASE}/lyric?id=${id}`);
+        const data = await response.json();
+        if (data.lrc && data.lrc.lyric) {
+            document.getElementById('j-lrc').value = data.lrc.lyric.substring(0, 50) + '...';
+            
+            // 生成歌词下载链接
+            const lrcContent = data.lrc.lyric;
+            const blob = new Blob([lrcContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            document.getElementById('j-lrc-btn').href = url;
+            document.getElementById('j-lrc-btn').download = 'lyrics.lrc';
+        }
+    } catch (error) {
+        console.error('获取歌词失败:', error);
+    }
 }
 
 // 获取歌曲列表
