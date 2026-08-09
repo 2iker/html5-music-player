@@ -1,14 +1,19 @@
 // API配置
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
-let player = null;
-let playerList = [];
-let songsList = [];
-let searchKeyword = '';
-let currentPage = 1;
-let isLoadMore = false;
+let currentPlatform = 'netease';
+let ap = null;
 
-// 搜索音乐
+// 平台切换
+document.querySelectorAll('.tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        currentPlatform = this.dataset.platform;
+    });
+});
+
+// 搜索功能
 async function searchMusic() {
     const keyword = document.getElementById('searchInput').value.trim();
     if (!keyword) {
@@ -16,212 +21,123 @@ async function searchMusic() {
         return;
     }
 
-    searchKeyword = keyword;
-    currentPage = 1;
-
-    const searchBtn = document.getElementById('searchBtn');
-    searchBtn.innerHTML = '<span class="loading"></span>';
-    searchBtn.disabled = true;
+    const resultDiv = document.getElementById('result');
+    const resultList = document.getElementById('resultList');
+    resultDiv.classList.remove('hidden');
+    resultList.innerHTML = '<div class="loading">搜索中...</div>';
 
     try {
-        const data = await fetchSongs(keyword, currentPage);
+        const url = `${API_BASE}/search?keywords=${encodeURIComponent(keyword)}&limit=10`;
+        const response = await fetch(url);
+        const data = await response.json();
 
-        if (data && data.length > 0) {
-            songsList = data;
-            playerList = convertToPlayerList(data);
-
-            // 显示歌曲列表
-            displaySongList(data);
-
-            // 创建播放器
-            createPlayer(data[0]);
-
-            // 切换界面
-            document.getElementById('searchSection').classList.add('hidden');
-            document.getElementById('listSection').classList.remove('hidden');
-            document.getElementById('playerSection').classList.remove('hidden');
+        if (data.code === 200 && data.result && data.result.songs) {
+            displayResults(data.result.songs);
         } else {
-            alert('未找到相关歌曲');
+            resultList.innerHTML = '<div class="empty">未找到相关歌曲</div>';
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        alert('搜索失败，请重试');
-    } finally {
-        searchBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>`;
-        searchBtn.disabled = false;
+        resultList.innerHTML = '<div class="error">搜索失败，请重试</div>';
     }
 }
 
-// 显示歌曲列表
-function displaySongList(songs) {
-    const listEl = document.getElementById('songList');
-    listEl.innerHTML = songs.map((song, index) => {
-        const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+// 显示搜索结果
+function displayResults(songs) {
+    const resultList = document.getElementById('resultList');
+
+    if (!songs || songs.length === 0) {
+        resultList.innerHTML = '<div class="empty">未找到相关歌曲</div>';
+        return;
+    }
+
+    resultList.innerHTML = songs.map((song, index) => {
+        const artists = song.artists ? song.artists.map(a => a.name).join('/') : '未知';
+        const album = song.album ? song.album.name : '';
+        const picUrl = song.album && song.album.picUrl ? song.album.picUrl : '';
         return `
-            <div class="song-item" onclick="playSong(${index})">
-                <span class="index">${index + 1}</span>
-                <div class="info">
-                    <h4>${escapeHtml(song.name)}</h4>
-                    <p>${escapeHtml(artists)}</p>
-                </div>
-                <button class="btn-play" onclick="event.stopPropagation(); playSong(${index})">播放</button>
+        <div class="result-item">
+            <span class="index">${index + 1}</span>
+            <div class="song-info">
+                <h4>${escapeHtml(song.name)} <span class="id">ID: ${song.id}</span></h4>
+                <p>${escapeHtml(artists)} ${album ? '- ' + escapeHtml(album) : ''}</p>
             </div>
-        `;
+            <div class="actions">
+                <button class="btn-play" onclick='playSong(${JSON.stringify(song).replace(/'/g, "\\'")})'>播放</button>
+                <button class="btn-copy" onclick="copyUrl('http://music.163.com/song/media/outer/url?id=${song.id}.mp3')">复制</button>
+            </div>
+        </div>
+    `;
     }).join('');
 }
 
-// 播放歌曲
-function playSong(index) {
-    if (index >= 0 && index < songsList.length) {
-        createPlayer(songsList[index]);
+// 获取歌曲播放链接
+async function getSongUrl(id) {
+    try {
+        const url = `${API_BASE}/song/url/v1?id=${id}&level=exhigh`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.code === 200 && data.data && data.data[0] && data.data[0].url) {
+            return data.data[0].url;
+        }
+        return `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
+    } catch (error) {
+        console.error('获取播放链接失败:', error);
+        return `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
     }
 }
 
-// 创建播放器
-function createPlayer(song) {
-    const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-    const picUrl = song.al && song.al.picUrl ? song.al.picUrl.replace('http://', 'https://') : '';
-    const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+// 播放歌曲
+async function playSong(song) {
+    const artists = song.artists ? song.artists.map(a => a.name).join('/') : '未知';
+    const album = song.album ? song.album.name : '';
+    const picUrl = song.album && song.album.picUrl ? song.album.picUrl : '';
 
-    // 更新歌曲信息
-    document.getElementById('songTitle').textContent = song.name;
-    document.getElementById('songArtist').textContent = artists;
-    document.getElementById('songId').textContent = song.id;
-    document.getElementById('songLink').href = `https://music.163.com/#/song?id=${song.id}`;
-    document.getElementById('songUrl').value = audioUrl;
-    document.getElementById('downloadBtn').href = audioUrl;
-    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
+    // 获取播放链接
+    const audioUrl = await getSongUrl(song.id);
 
-    // 销毁旧播放器
-    if (player) {
-        player.destroy();
+    // 显示播放器
+    document.getElementById('playerSection').classList.remove('hidden');
+
+    // 销毁旧的播放器
+    if (ap) {
+        ap.destroy();
     }
 
-    // 创建新播放器
-    player = new APlayer({
+    // 创建APlayer
+    ap = new APlayer({
         container: document.getElementById('aplayer'),
         mini: false,
         autoplay: true,
-        lrcType: 1,
+        lrcType: 0,
         mutex: true,
         preload: 'auto',
         volume: 0.7,
-        listmaxheight: 9999,
         audio: [{
             name: song.name,
             artist: artists,
             url: audioUrl,
-            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
+            lrc: ''
         }]
     });
 
-    // 错误处理
-    let errorCount = 0;
-    player.on('error', function() {
-        errorCount++;
-        if (errorCount <= 3) {
-            showNotice('该歌曲暂时无法播放，正在播放下一首');
-        }
-        player.skipForward();
-        setTimeout(() => player.play(), 300);
-    });
+    // 设置下载链接
+    document.getElementById('downloadBtn').href = audioUrl;
+    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
 
-    player.on('canplay', () => errorCount = 0);
-}
+    // 设置分享链接
+    document.getElementById('shareLink').value = audioUrl;
 
-// 获取歌曲列表
-async function fetchSongs(keyword, page) {
-    const url = `${API_BASE}/cloudsearch?keywords=${encodeURIComponent(keyword)}&limit=10&type=1&offset=${(page - 1) * 10}`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.body && data.body.result && data.body.result.songs) {
-        return data.body.result.songs;
-    } else if (data.result && data.result.songs) {
-        return data.result.songs;
-    }
-    return [];
-}
-
-// 转换为APlayer格式
-function convertToPlayerList(songs) {
-    return songs.map(song => {
-        const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-        let picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
-        if (picUrl.startsWith('http://')) picUrl = picUrl.replace('http://', 'https://');
-
-        return {
-            name: song.name,
-            artist: artists,
-            url: `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`,
-            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
-        };
-    });
-}
-
-// 载入更多
-async function loadMore() {
-    if (isLoadMore) return;
-    isLoadMore = true;
-    currentPage++;
-
-    const btn = document.getElementById('loadMoreBtn');
-    btn.textContent = '加载中...';
-    btn.disabled = true;
-
-    try {
-        const data = await fetchSongs(searchKeyword, currentPage);
-
-        if (data && data.length > 0) {
-            songsList = songsList.concat(data);
-            const newItems = data.map((song, i) => {
-                const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-                const index = songsList.length - data.length + i + 1;
-                return `
-                    <div class="song-item" onclick="playSong(${index - 1})">
-                        <span class="index">${index}</span>
-                        <div class="info">
-                            <h4>${escapeHtml(song.name)}</h4>
-                            <p>${escapeHtml(artists)}</p>
-                        </div>
-                        <button class="btn-play" onclick="event.stopPropagation(); playSong(${index - 1})">播放</button>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('songList').insertAdjacentHTML('beforeend', newItems);
-
-            if (data.length < 10) {
-                btn.textContent = '没有更多了';
-                btn.disabled = true;
-            } else {
-                btn.textContent = '载入更多';
-                btn.disabled = false;
-            }
-        } else {
-            btn.textContent = '没有更多了';
-            btn.disabled = true;
-        }
-    } catch (error) {
-        console.error('加载失败:', error);
-        btn.textContent = '加载失败，点击重试';
-        btn.disabled = false;
-    } finally {
-        isLoadMore = false;
-    }
-}
-
-// 返回搜索
-function backToSearch() {
-    if (player) player.pause();
-    document.getElementById('searchSection').classList.remove('hidden');
-    document.getElementById('listSection').classList.add('hidden');
-    document.getElementById('playerSection').classList.add('hidden');
+    // 滚动到播放器
+    document.getElementById('playerSection').scrollIntoView({ behavior: 'smooth' });
 }
 
 // 复制链接
 function copyUrl(url) {
     navigator.clipboard.writeText(url).then(() => {
-        showNotice('链接已复制');
+        alert('链接已复制！');
     }).catch(() => {
         const input = document.createElement('input');
         input.value = url;
@@ -229,27 +145,31 @@ function copyUrl(url) {
         input.select();
         document.execCommand('copy');
         document.body.removeChild(input);
-        showNotice('链接已复制');
+        alert('链接已复制！');
     });
 }
 
-// 显示提示
-function showNotice(text) {
-    const notice = document.getElementById('notice');
-    notice.textContent = text;
-    notice.classList.remove('hidden');
-    setTimeout(() => notice.classList.add('hidden'), 2000);
+// 复制分享链接
+function copyLink() {
+    const linkInput = document.getElementById('shareLink');
+    copyUrl(linkInput.value);
 }
 
 // HTML转义
 function escapeHtml(text) {
     if (!text) return '';
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-// 回车搜索
-document.getElementById('searchInput').addEventListener('keypress', e => {
+// 支持回车键搜索
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         e.preventDefault();
         searchMusic();
