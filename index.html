@@ -3,107 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音乐搜索器 - 免费音乐下载</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amazeui@2.7.2/dist/css/amazeui.min.css">
+    <title>Music - 免费音乐搜索</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
-    <section class="about">
-        <div class="am-container page-shell">
-            <header class="hero">
-                <div class="brand-lockup">
-                    <span class="brand-mark">🎵</span>
-                    <div class="brand-copy">
-                        <h1 class="about-title">音乐搜索器</h1>
-                        <p>CD级音质，让天下没有难搜的歌曲</p>
+    <div class="app">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🎵</span>
+                <span class="logo-text">Music</span>
+            </div>
+            <p class="tagline">免费音乐搜索 · 在线播放 · 一键下载</p>
+        </header>
+
+        <!-- 搜索区域 -->
+        <section id="searchSection" class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索歌曲、歌手、专辑...">
+                <button id="searchBtn" onclick="searchMusic()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="platform-tags">
+                <span class="tag active" data-platform="netease">网易云</span>
+            </div>
+        </section>
+
+        <!-- 播放器区域 -->
+        <section id="playerSection" class="player-section hidden">
+            <div class="song-info-card">
+                <div class="song-details">
+                    <h2 id="songTitle">-</h2>
+                    <p id="songArtist">-</p>
+                </div>
+                <div class="song-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">ID</span>
+                        <span id="songId" class="meta-value">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">链接</span>
+                        <a id="songLink" href="#" target="_blank" class="meta-link">查看</a>
                     </div>
                 </div>
-                <div class="hero-badge">🎧 多平台搜索</div>
-            </header>
+                <div class="song-actions">
+                    <button onclick="copyUrl(document.getElementById('songUrl').value)" class="btn-action">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        复制链接
+                    </button>
+                    <a id="downloadBtn" href="#" download class="btn-action btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        下载
+                    </a>
+                </div>
+                <input type="hidden" id="songUrl">
+            </div>
 
-            <main class="music-layout">
-                <!-- 搜索表单 -->
-                <form id="j-validator" class="am-form music-panel search-panel">
-                    <ul id="j-nav" class="am-nav am-nav-pills am-nav-justify music-tabs">
-                        <li class="am-active" data-filter="name"><a>音乐名称</a></li>
-                        <li data-filter="id"><a>音乐 ID</a></li>
-                        <li data-filter="url"><a>音乐地址</a></li>
-                    </ul>
-                    <div class="am-form-group search-field">
-                        <input id="j-input" class="am-form-field am-input-lg am-radius" placeholder="例如: 不要说话 陈奕迅" required>
-                    </div>
-                    <div id="j-type" class="am-form-group music-type">
-                        <label class="am-radio-inline"><input type="radio" name="music_type" value="netease" checked> 网易</label>
-                        <label class="am-radio-inline"><input type="radio" name="music_type" value="qq"> QQ</label>
-                        <label class="am-radio-inline"><input type="radio" name="music_type" value="kugou"> 酷狗</label>
-                        <label class="am-radio-inline"><input type="radio" name="music_type" value="kuwo"> 酷我</label>
-                    </div>
-                    <button id="j-submit" type="submit" class="am-btn am-btn-primary am-btn-lg am-btn-block am-radius music-submit">⚡ 一键搜索</button>
-                </form>
+            <!-- APlayer -->
+            <div id="aplayer"></div>
 
-                <!-- 结果表单 -->
-                <form id="j-main" class="am-form music-main music-panel result-panel" style="display:none;">
-                    <a id="j-back" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back">↩ 返回搜索</a>
-                    <div class="result-grid">
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐地址', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
-                            <input id="j-link" class="am-form-field" readonly>
-                            <span class="am-input-group-btn">
-                                <a id="j-link-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-external-link"></i></a>
-                            </span>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐链接', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-music am-icon-fw"></i></span>
-                            <input id="j-src" class="am-form-field" readonly>
-                            <span class="am-input-group-btn">
-                                <a id="j-src-btn" class="am-btn am-btn-default" target="_blank" rel="noreferrer" title="在新窗口打开音乐链接"><i id="j-src-btn-icon" class="am-icon-download"></i></a>
-                            </span>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐ID', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-list-ol am-icon-fw"></i></span>
-                            <input id="j-songid" class="am-form-field" readonly>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐歌词', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-file-text-o am-icon-fw"></i></span>
-                            <input id="j-lrc" class="am-form-field" readonly>
-                            <span class="am-input-group-btn">
-                                <a id="j-lrc-btn" class="am-btn am-btn-default" target="_blank"><i id="j-lrc-btn-icon" class="am-icon-download"></i></a>
-                            </span>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐名称', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-tag am-icon-fw"></i></span>
-                            <input id="j-name" class="am-form-field" readonly>
-                        </div>
-                        <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐作者', trigger: 'hover'}">
-                            <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
-                            <input id="j-author" class="am-form-field" readonly>
-                        </div>
-                    </div>
-                    <div id="j-show" class="player-wrap">
-                        <div id="j-player" class="aplayer"></div>
-                        <div id="j-more" class="aplayer-more" style="display:none;">载入更多（无法播放请换一个试试）</div>
-                    </div>
-                </form>
-            </main>
+            <!-- 载入更多 -->
+            <button id="loadMoreBtn" class="btn-load-more" onclick="loadMore()">
+                <span>载入更多</span>
+            </button>
 
-            <section class="music-tips">
-                <h2>帮助</h2>
-                <p><b>标红</b> 为 <strong>音乐 ID</strong></p>
-                <blockquote>
-                    <p><span>网易：</span>https://music.163.com/#/song?id=<b>25906124</b></p>
-                    <p><span>QQ：</span>https://y.qq.com/n/yqq/song/<b>002B2EAA3brD5b</b>.html</p>
-                    <p><span>酷狗：</span>http://www.kugou.com/song/#hash=<b>08228af3cb404e8a4e7e9871bf543ff6</b></p>
-                    <p><span>酷我：</span>https://www.kuwo.cn/play_detail/<b>175264544</b></p>
-                </blockquote>
-            </section>
-        </div>
-    </section>
+            <!-- 提示信息 -->
+            <div id="notice" class="notice hidden"></div>
+        </section>
 
-    <footer class="footer">
-        <p>仅供学习交流使用，请支持正版音乐</p>
-    </footer>
+        <!-- 歌曲列表 -->
+        <section id="listSection" class="list-section hidden">
+            <div class="list-header">
+                <h3>搜索结果</h3>
+                <button onclick="backToSearch()" class="btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+                    返回搜索
+                </button>
+            </div>
+            <div id="songList" class="song-list"></div>
+        </section>
+
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <p>仅供学习交流使用，请支持正版音乐</p>
+        </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>

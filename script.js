@@ -1,167 +1,139 @@
 // API配置
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
-var player = null;
-var playerList = [];
-var songsList = [];  // 存储所有歌曲数据
-var searchKeyword = '';
-var currentPage = 1;
-var isLoadMore = false;
-
-// Tab切换
-$('#j-nav').on('click', 'li', function() {
-    var holder = {
-        name: '例如: 不要说话 陈奕迅',
-        id: '例如: 25906124',
-        url: '例如: https://music.163.com/#/song?id=25906124'
-    };
-    var filter = $(this).data('filter');
-    $(this).addClass('am-active').siblings('li').removeClass('am-active');
-    $('#j-input').attr('placeholder', holder[filter]);
-});
-
-// 搜索表单提交
-$('#j-validator').on('submit', function(e) {
-    e.preventDefault();
-    searchMusic();
-});
-
-// 返回按钮
-$('#j-back').on('click', function() {
-    if (player) {
-        player.pause();
-    }
-    $('#j-validator').show();
-    $('#j-main').hide();
-});
+let player = null;
+let playerList = [];
+let songsList = [];
+let searchKeyword = '';
+let currentPage = 1;
+let isLoadMore = false;
 
 // 搜索音乐
 async function searchMusic() {
-    searchKeyword = $.trim($('#j-input').val());
-    if (!searchKeyword) {
+    const keyword = document.getElementById('searchInput').value.trim();
+    if (!keyword) {
         alert('请输入搜索内容');
         return;
     }
 
+    searchKeyword = keyword;
     currentPage = 1;
-    $('#j-submit').text('搜索中...').prop('disabled', true);
+
+    const searchBtn = document.getElementById('searchBtn');
+    searchBtn.innerHTML = '<span class="loading"></span>';
+    searchBtn.disabled = true;
 
     try {
-        var data = await fetchSongs(searchKeyword, currentPage);
+        const data = await fetchSongs(keyword, currentPage);
 
         if (data && data.length > 0) {
-            // 保存歌曲数据
             songsList = data;
+            playerList = convertToPlayerList(data);
 
-            // 获取歌词
-            var lyric = await getLyric(data[0].id);
+            // 显示歌曲列表
+            displaySongList(data);
 
-            // 转换为APlayer格式
-            playerList = convertToPlayerList(data, lyric);
+            // 创建播放器
+            createPlayer(data[0]);
 
-            // 显示播放器
-            $('#j-validator').hide();
-            $('#j-main').show();
-
-            // 更新歌曲信息
-            updateSongInfo(data[0], playerList[0].url, lyric);
-
-            // 销毁旧播放器
-            if (player) {
-                player.destroy();
-            }
-
-            // 创建APlayer
-            player = new APlayer({
-                container: document.getElementById('j-player'),
-                mini: false,
-                autoplay: false,
-                lrcType: 1,
-                mutex: true,
-                preload: 'auto',
-                volume: 0.7,
-                listmaxheight: 9999,
-                audio: playerList
-            });
-
-            // 监听音频加载错误
-            var errorCount = 0;
-            player.on('error', function() {
-                errorCount++;
-                if (errorCount <= 3) {
-                    // 在页面底部显示提示
-                    var notice = $('<div id="play-notice" style="position:fixed;bottom:160px;left:50%;transform:translateX(-50%);background:#f8d7da;color:#721c24;padding:12px 24px;border-radius:8px;font-size:13px;border:1px solid #f5c6cb;box-shadow:0 4px 15px rgba(0,0,0,0.2);z-index:9999;">该歌曲暂时无法播放，正在播放下一首</div>');
-                    $('body').append(notice);
-                    setTimeout(function() { notice.remove(); }, 2000);
-                }
-                // 切换到下一首并播放
-                player.skipForward();
-                setTimeout(function() {
-                    player.play();
-                }, 300);
-            });
-
-            // 播放成功时重置错误计数
-            player.on('canplay', function() {
-                errorCount = 0;
-            });
-
-            // 更新歌曲信息的函数
-            function updateCurrentSongInfo(index) {
-                if (index === undefined) index = player.list.index;
-                if (index >= 0 && index < songsList.length) {
-                    var song = songsList[index];
-                    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-                    var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
-                    
-                    $('#j-link').val('https://music.163.com/#/song?id=' + song.id);
-                    $('#j-link-btn').attr('href', 'https://music.163.com/#/song?id=' + song.id);
-                    $('#j-src').val(audioUrl);
-                    $('#j-src-btn').attr('href', audioUrl);
-                    $('#j-songid').val(song.id);
-                    $('#j-name').val(song.name);
-                    $('#j-author').val(artists);
-                }
-            }
-
-            // 监听播放列表切换事件
-            player.on('listswitch', function(data) {
-                setTimeout(function() {
-                    updateCurrentSongInfo(data.index);
-                }, 100);
-            });
-
-            // 监听播放事件
-            player.on('play', function() {
-                updateCurrentSongInfo();
-            });
-
-            // 初始更新
-            updateCurrentSongInfo(0);
-
-            // 添加载入更多按钮
-            setTimeout(function() {
-                addLoadMoreButton();
-            }, 100);
+            // 切换界面
+            document.getElementById('searchSection').classList.add('hidden');
+            document.getElementById('listSection').classList.remove('hidden');
+            document.getElementById('playerSection').classList.remove('hidden');
         } else {
-            alert('未找到相关歌曲，请换个关键词试试');
+            alert('未找到相关歌曲');
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        alert('搜索失败: ' + error.message);
+        alert('搜索失败，请重试');
     } finally {
-        $('#j-submit').text('⚡ 一键搜索').prop('disabled', false);
+        searchBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>`;
+        searchBtn.disabled = false;
     }
+}
+
+// 显示歌曲列表
+function displaySongList(songs) {
+    const listEl = document.getElementById('songList');
+    listEl.innerHTML = songs.map((song, index) => {
+        const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+        return `
+            <div class="song-item" onclick="playSong(${index})">
+                <span class="index">${index + 1}</span>
+                <div class="info">
+                    <h4>${escapeHtml(song.name)}</h4>
+                    <p>${escapeHtml(artists)}</p>
+                </div>
+                <button class="btn-play" onclick="event.stopPropagation(); playSong(${index})">播放</button>
+            </div>
+        `;
+    }).join('');
+}
+
+// 播放歌曲
+function playSong(index) {
+    if (index >= 0 && index < songsList.length) {
+        createPlayer(songsList[index]);
+    }
+}
+
+// 创建播放器
+function createPlayer(song) {
+    const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+    const picUrl = song.al && song.al.picUrl ? song.al.picUrl.replace('http://', 'https://') : '';
+    const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+
+    // 更新歌曲信息
+    document.getElementById('songTitle').textContent = song.name;
+    document.getElementById('songArtist').textContent = artists;
+    document.getElementById('songId').textContent = song.id;
+    document.getElementById('songLink').href = `https://music.163.com/#/song?id=${song.id}`;
+    document.getElementById('songUrl').value = audioUrl;
+    document.getElementById('downloadBtn').href = audioUrl;
+    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
+
+    // 销毁旧播放器
+    if (player) {
+        player.destroy();
+    }
+
+    // 创建新播放器
+    player = new APlayer({
+        container: document.getElementById('aplayer'),
+        mini: false,
+        autoplay: true,
+        lrcType: 1,
+        mutex: true,
+        preload: 'auto',
+        volume: 0.7,
+        listmaxheight: 9999,
+        audio: [{
+            name: song.name,
+            artist: artists,
+            url: audioUrl,
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
+        }]
+    });
+
+    // 错误处理
+    let errorCount = 0;
+    player.on('error', function() {
+        errorCount++;
+        if (errorCount <= 3) {
+            showNotice('该歌曲暂时无法播放，正在播放下一首');
+        }
+        player.skipForward();
+        setTimeout(() => player.play(), 300);
+    });
+
+    player.on('canplay', () => errorCount = 0);
 }
 
 // 获取歌曲列表
 async function fetchSongs(keyword, page) {
-    var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(keyword) + '&limit=10&type=1&offset=' + ((page - 1) * 10);
-    console.log('请求URL:', url);
-
-    var response = await fetch(url);
-    var data = await response.json();
-    console.log('返回数据:', data);
+    const url = `${API_BASE}/cloudsearch?keywords=${encodeURIComponent(keyword)}&limit=10&type=1&offset=${(page - 1) * 10}`;
+    const response = await fetch(url);
+    const data = await response.json();
 
     if (data.body && data.body.result && data.body.result.songs) {
         return data.body.result.songs;
@@ -172,27 +144,19 @@ async function fetchSongs(keyword, page) {
 }
 
 // 转换为APlayer格式
-function convertToPlayerList(songs, lyric) {
-    var list = [];
-    for (var i = 0; i < songs.length; i++) {
-        var song = songs[i];
-        var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-        var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
-        // 将http改为https
-        if (picUrl && picUrl.startsWith('http://')) {
-            picUrl = picUrl.replace('http://', 'https://');
-        }
-        var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
+function convertToPlayerList(songs) {
+    return songs.map(song => {
+        const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+        let picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
+        if (picUrl.startsWith('http://')) picUrl = picUrl.replace('http://', 'https://');
 
-        list.push({
+        return {
             name: song.name,
             artist: artists,
-            url: audioUrl,
-            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-            lrc: i === 0 ? lyric : ''
-        });
-    }
-    return list;
+            url: `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`,
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
+        };
+    });
 }
 
 // 载入更多
@@ -201,134 +165,91 @@ async function loadMore() {
     isLoadMore = true;
     currentPage++;
 
-    // 显示加载中
-    $('#j-more').text('加载中...').css('pointer-events', 'none');
-
-    // 保存当前滚动位置
-    var list = $('.aplayer-list')[0];
-    var scrollPos = list ? list.scrollTop : 0;
+    const btn = document.getElementById('loadMoreBtn');
+    btn.textContent = '加载中...';
+    btn.disabled = true;
 
     try {
-        var data = await fetchSongs(searchKeyword, currentPage);
+        const data = await fetchSongs(searchKeyword, currentPage);
 
         if (data && data.length > 0) {
-            // 保存歌曲数据
             songsList = songsList.concat(data);
+            const newItems = data.map((song, i) => {
+                const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+                const index = songsList.length - data.length + i + 1;
+                return `
+                    <div class="song-item" onclick="playSong(${index - 1})">
+                        <span class="index">${index}</span>
+                        <div class="info">
+                            <h4>${escapeHtml(song.name)}</h4>
+                            <p>${escapeHtml(artists)}</p>
+                        </div>
+                        <button class="btn-play" onclick="event.stopPropagation(); playSong(${index - 1})">播放</button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('songList').insertAdjacentHTML('beforeend', newItems);
 
-            // 直接在ol中添加新的li
-            var ol = $('.aplayer-list ol');
-            var startIndex = playerList.length;
-
-            for (var i = 0; i < data.length; i++) {
-                var song = data[i];
-                var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-
-                // 构建li元素
-                var li = $('<li>' +
-                    '<span class="aplayer-list-cur" style="background-color: rgb(14, 144, 210);"></span>' +
-                    '<span class="aplayer-list-index">' + (startIndex + i + 1) + '</span>' +
-                    '<span class="aplayer-list-title">' + song.name + '</span>' +
-                    '<span class="aplayer-list-author">' + artists + '</span>' +
-                    '</li>');
-                ol.append(li);
-
-                // 添加到播放列表数据
-                var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
-                // 将http改为https
-                if (picUrl && picUrl.startsWith('http://')) {
-                    picUrl = picUrl.replace('http://', 'https://');
-                }
-                playerList.push({
-                    name: song.name,
-                    artist: artists,
-                    url: 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3',
-                    cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-                    lrc: ''
-                });
-            }
-
-            // 使用requestAnimationFrame恢复滚动位置
-            requestAnimationFrame(function() {
-                requestAnimationFrame(function() {
-                    list.scrollTop = scrollPos;
-                });
-            });
-
-            // 更新按钮状态
             if (data.length < 10) {
-                $('#j-more').text('没有了').css('pointer-events', 'none');
+                btn.textContent = '没有更多了';
+                btn.disabled = true;
             } else {
-                $('#j-more').text('载入更多（无法播放请换一个试试）').css('pointer-events', 'auto');
+                btn.textContent = '载入更多';
+                btn.disabled = false;
             }
         } else {
-            $('#j-more').text('没有了').css('pointer-events', 'none');
+            btn.textContent = '没有更多了';
+            btn.disabled = true;
         }
     } catch (error) {
-        console.error('载入更多失败:', error);
-        $('#j-more').text('加载失败，点击重试').css('pointer-events', 'auto');
+        console.error('加载失败:', error);
+        btn.textContent = '加载失败，点击重试';
+        btn.disabled = false;
     } finally {
         isLoadMore = false;
     }
 }
 
-// 添加载入更多按钮
-function addLoadMoreButton() {
-    $('#j-more').show();
-    $('#j-more').off('click').on('click', function() {
-        loadMore();
+// 返回搜索
+function backToSearch() {
+    if (player) player.pause();
+    document.getElementById('searchSection').classList.remove('hidden');
+    document.getElementById('listSection').classList.add('hidden');
+    document.getElementById('playerSection').classList.add('hidden');
+}
+
+// 复制链接
+function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        showNotice('链接已复制');
+    }).catch(() => {
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showNotice('链接已复制');
     });
 }
 
-// 更新歌曲信息
-function updateSongInfo(song, audioUrl, lyric) {
-    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-    $('#j-link').val('https://music.163.com/#/song?id=' + song.id);
-    $('#j-link-btn').attr('href', 'https://music.163.com/#/song?id=' + song.id);
-    $('#j-src').val(audioUrl);
-    $('#j-src-btn').attr('href', audioUrl);
-    $('#j-songid').val(song.id);
-    $('#j-name').val(song.name);
-    $('#j-author').val(artists);
-    $('#j-lrc').val(lyric.substring(0, 50) + '...');
-
-    // 生成歌词下载链接
-    window.currentLyric = lyric;
-    window.currentSongName = song.name;
-    window.currentArtistName = artists;
-    $('#j-lrc-btn').off('click').on('click', function(e) {
-        e.preventDefault();
-        var lrcContent = window.currentLyric;
-        var blob = new Blob([lrcContent], { type: 'text/plain;charset=utf-8' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = window.currentSongName + '-' + window.currentArtistName + '.lrc';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    });
+// 显示提示
+function showNotice(text) {
+    const notice = document.getElementById('notice');
+    notice.textContent = text;
+    notice.classList.remove('hidden');
+    setTimeout(() => notice.classList.add('hidden'), 2000);
 }
 
-// 获取歌词
-async function getLyric(id) {
-    try {
-        var url = API_BASE + '/lyric?id=' + id;
-        var response = await fetch(url);
-        var data = await response.json();
-
-        if (data.code === 200 && data.lrc && data.lrc.lyric) {
-            return data.lrc.lyric;
-        }
-        return '暂无歌词';
-    } catch (error) {
-        console.error('获取歌词失败:', error);
-        return '暂无歌词';
-    }
+// HTML转义
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-// 支持回车键搜索
-$('#j-input').on('keypress', function(e) {
+// 回车搜索
+document.getElementById('searchInput').addEventListener('keypress', e => {
     if (e.key === 'Enter') {
         e.preventDefault();
         searchMusic();
