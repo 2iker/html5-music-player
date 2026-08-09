@@ -89,9 +89,9 @@ async function searchMusic() {
             player.on('error', function() {
                 errorCount++;
                 if (errorCount <= 3) {
-                    // 在播放器正下方显示小提示
-                    var notice = $('<div id="play-notice" style="text-align:center;padding:8px;background:#f8d7da;color:#721c24;border-radius:6px;margin-top:10px;font-size:13px;border:1px solid #f5c6cb;">该歌曲暂时无法播放，正在播放下一首</div>');
-                    $('#j-player').after(notice);
+                    // 在页面底部显示提示
+                    var notice = $('<div id="play-notice" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#f8d7da;color:#721c24;padding:12px 24px;border-radius:8px;font-size:13px;border:1px solid #f5c6cb;box-shadow:0 4px 15px rgba(0,0,0,0.2);z-index:9999;">该歌曲暂时无法播放，正在播放下一首</div>');
+                    $('body').append(notice);
                     setTimeout(function() { notice.remove(); }, 2000);
                 }
                 // 切换到下一首并播放
