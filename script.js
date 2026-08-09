@@ -1,5 +1,5 @@
 // API配置
-const API_BASE = 'https://music-api-inky-nine.vercel.app';
+const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
 // 平台配置
 const platforms = {
