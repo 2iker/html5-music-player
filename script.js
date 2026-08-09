@@ -6,6 +6,7 @@ let playerList = [];
 let songsList = [];
 let searchKeyword = '';
 let currentPage = 1;
+let isLoadMore = false;
 
 // 搜索音乐
 async function searchMusic() {
@@ -35,6 +36,10 @@ async function searchMusic() {
             // 切换界面
             document.getElementById('j-validator').style.display = 'none';
             document.getElementById('j-main').style.display = 'block';
+
+            // 显示载入更多按钮
+            $('#j-more').show();
+            $('#j-more').off('click').on('click', loadMore);
         } else {
             alert('未找到相关歌曲');
         }
@@ -154,6 +159,46 @@ function backToSearch() {
     if (player) player.pause();
     document.getElementById('j-validator').style.display = 'block';
     document.getElementById('j-main').style.display = 'none';
+}
+
+// 载入更多
+async function loadMore() {
+    if (isLoadMore) return;
+    isLoadMore = true;
+    currentPage++;
+
+    const btn = document.getElementById('j-more');
+    btn.textContent = '加载中...';
+    btn.style.pointerEvents = 'none';
+
+    try {
+        const data = await fetchSongs(searchKeyword, currentPage);
+
+        if (data && data.length > 0) {
+            songsList = songsList.concat(data);
+            const newMusicList = convertToPlayerList(data);
+
+            // 使用APlayer的add方法添加歌曲
+            newMusicList.forEach(music => {
+                player.list.add(music);
+            });
+
+            if (data.length < 10) {
+                btn.textContent = '没有更多了';
+            } else {
+                btn.textContent = '载入更多（无法播放请换一个试试）';
+                btn.style.pointerEvents = 'auto';
+            }
+        } else {
+            btn.textContent = '没有更多了';
+        }
+    } catch (error) {
+        console.error('加载失败:', error);
+        btn.textContent = '加载失败，点击重试';
+        btn.style.pointerEvents = 'auto';
+    } finally {
+        isLoadMore = false;
+    }
 }
 
 // 回车搜索
