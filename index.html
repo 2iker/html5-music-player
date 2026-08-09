@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐解析工具 - 免费音乐下载</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 音乐解析工具</h1>
+            <p class="subtitle">支持多平台音乐解析下载</p>
+        </header>
+
+        <main>
+            <div class="input-group">
+                <label for="platform">选择平台</label>
+                <select id="platform">
+                    <option value="netease">网易云音乐</option>
+                    <option value="qq">QQ音乐</option>
+                    <option value="kugou">酷狗音乐</option>
+                    <option value="kuwo">酷我音乐</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="songId">输入歌曲ID或链接</label>
+                <input type="text" id="songId" placeholder="例如: 29004400 或完整链接">
+                <span class="hint" id="hint">网易云音乐歌曲ID，从歌曲页面URL获取</span>
+            </div>
+
+            <button id="parseBtn" onclick="parseMusic()">解析音乐</button>
+
+            <div id="result" class="result hidden">
+                <div class="song-info">
+                    <img id="cover" src="" alt="封面">
+                    <div class="info">
+                        <h3 id="songTitle">-</h3>
+                        <p id="songArtist">-</p>
+                        <p id="songAlbum">-</p>
+                    </div>
+                </div>
+
+                <audio id="audioPlayer" controls></audio>
+
+                <div class="actions">
+                    <a id="downloadBtn" href="#" download class="btn-download">下载音乐</a>
+                    <button onclick="copyLink()" class="btn-copy">复制链接</button>
+                </div>
+
+                <div class="share-link">
+                    <label>外链地址：</label>
+                    <input type="text" id="shareLink" readonly>
+                </div>
+            </div>
+
+            <div class="help-section">
+                <h3>使用说明</h3>
+                <div class="help-content">
+                    <div class="help-item">
+                        <h4>网易云音乐</h4>
+                        <p>歌曲ID从URL获取：music.163.com/#/song?id=<strong>29004400</strong></p>
+                    </div>
+                    <div class="help-item">
+                        <h4>QQ音乐</h4>
+                        <p>歌曲ID从URL获取：y.qq.com/n/yqq/song/<strong>003OUlho2HcRHC</strong>.html</p>
+                    </div>
+                    <div class="help-item">
+                        <h4>酷狗音乐</h4>
+                        <p>歌曲Hash从URL获取：kugou.com/song/#hash=<strong>08228af3cb404e8a4e7e9871bf543ff6</strong></p>
+                    </div>
+                    <div class="help-item">
+                        <h4>酷我音乐</h4>
+                        <p>歌曲ID从URL获取：kuwo.cn/play_detail/<strong>68279255</strong></p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>仅供学习交流使用，请支持正版音乐</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
