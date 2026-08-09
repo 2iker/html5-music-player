@@ -75,13 +75,19 @@ async function searchMusic() {
             player = new APlayer({
                 container: document.getElementById('j-player'),
                 mini: false,
-                autoplay: true,
+                autoplay: false,
                 lrcType: 1,
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
                 listmaxheight: 9999,
                 audio: playerList
+            });
+
+            // 监听音频加载错误
+            player.on('error', function() {
+                console.warn('音频加载失败，尝试下一首');
+                player.skipForward();
             });
 
             // 更新歌曲信息的函数
