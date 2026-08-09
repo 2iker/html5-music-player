@@ -40,26 +40,31 @@ async function searchMusic() {
 
     var type = $('input[name="music_type"]:checked').val();
 
-    $('#searchForm').hide();
-    $('#resultForm').show();
+    // 显示加载状态
+    $('.music-submit').text('搜索中...').prop('disabled', true);
 
     try {
         var url = API_BASE + '/search?keywords=' + encodeURIComponent(keyword) + '&limit=10';
+        console.log('请求URL:', url);
+
         var response = await fetch(url);
+        console.log('响应状态:', response.status);
+
         var data = await response.json();
+        console.log('返回数据:', data);
 
         if (data.code === 200 && data.result && data.result.songs && data.result.songs.length > 0) {
+            $('#searchForm').hide();
+            $('#resultForm').show();
             playSong(data.result.songs[0]);
         } else {
-            alert('未找到相关歌曲');
-            $('#searchForm').show();
-            $('#resultForm').hide();
+            alert('未找到相关歌曲，请换个关键词试试');
         }
     } catch (error) {
         console.error('搜索失败:', error);
-        alert('搜索失败，请重试');
-        $('#searchForm').show();
-        $('#resultForm').hide();
+        alert('搜索失败: ' + error.message);
+    } finally {
+        $('.music-submit').text('⚡ 一键搜索').prop('disabled', false);
     }
 }
 
@@ -73,8 +78,10 @@ async function getSongUrl(id) {
         if (data.code === 200 && data.data && data.data[0] && data.data[0].url) {
             return data.data[0].url;
         }
+        // 备用方案
         return 'http://music.163.com/song/media/outer/url?id=' + id + '.mp3';
     } catch (error) {
+        console.error('获取播放链接失败:', error);
         return 'http://music.163.com/song/media/outer/url?id=' + id + '.mp3';
     }
 }
@@ -87,6 +94,7 @@ async function playSong(song) {
 
     // 获取播放链接
     var audioUrl = await getSongUrl(song.id);
+    console.log('播放链接:', audioUrl);
 
     // 更新表单字段
     $('#linkInput').val('https://music.163.com/#/song?id=' + song.id);
