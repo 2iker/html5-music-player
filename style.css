@@ -6,7 +6,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     color: #333;
 }
 
@@ -31,7 +31,7 @@ h1 {
 
 h3 {
     margin-top: 20px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.7);
     font-weight: normal;
     letter-spacing: 1px;
 }
@@ -48,29 +48,29 @@ h3 {
 .search-input {
     flex: 1;
     padding: 12px 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 33px;
     font-size: 16px;
     outline: none;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     transition: all 0.3s;
 }
 
 .search-input:focus {
-    border-color: #fff;
-    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .search-btn {
     padding: 12px 30px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 33px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     font-size: 16px;
     color: #fff;
     cursor: pointer;
@@ -78,8 +78,8 @@ h3 {
 }
 
 .search-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* 结果区域 */
@@ -122,7 +122,7 @@ h3 {
     text-align: center;
     background: transparent;
     border: none;
-    color: #667eea;
+    color: #2c3e50;
 }
 
 .result-field .am-form-field {
@@ -148,9 +148,9 @@ h3 {
     width: 100%;
     padding: 12px;
     margin-top: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 33px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 14px;
     cursor: pointer;
@@ -158,8 +158,8 @@ h3 {
 }
 
 .load-more-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* 提示信息 */
