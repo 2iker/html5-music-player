@@ -115,6 +115,10 @@ h1 {
     max-width: 600px;
 }
 
+.player-section .search-wrap {
+    margin-bottom: 16px;
+}
+
 /* j-main - 深色和谐配色 */
 .music-panel {
     background: #23272a;
@@ -128,8 +132,8 @@ h1 {
 .result-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin: 12px 0;
+    gap: 2px 8px;
+    margin: 8px 0;
 }
 
 .result-field {
