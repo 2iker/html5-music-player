@@ -394,6 +394,23 @@ main {
     color: #667eea;
 }
 
+.loading, .error, .empty {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.loading {
+    color: #667eea;
+}
+
+.error {
+    color: #e74c3c;
+}
+
 footer {
     padding: 30px;
     text-align: center;
