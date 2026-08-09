@@ -6,13 +6,14 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: #f5f5f5;
+    background: #0f0f23;
     min-height: 100vh;
+    color: #fff;
 }
 
 .about {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
     padding: 40px 20px;
 }
 
@@ -24,7 +25,7 @@ body {
 .hero {
     text-align: center;
     color: white;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .brand-lockup {
@@ -32,42 +33,53 @@ body {
     align-items: center;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .brand-mark {
-    font-size: 48px;
+    font-size: 52px;
+    filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5));
 }
 
 .brand-copy h1 {
-    font-size: 32px;
+    font-size: 36px;
+    font-weight: 700;
     margin: 0;
+    background: linear-gradient(90deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .brand-copy p {
-    opacity: 0.9;
-    font-size: 14px;
-    margin: 5px 0 0;
+    opacity: 0.7;
+    font-size: 15px;
+    margin: 8px 0 0;
+    color: #a5b4fc;
 }
 
 .hero-badge {
     display: inline-block;
-    background: rgba(255,255,255,0.2);
-    padding: 8px 20px;
-    border-radius: 20px;
+    background: rgba(99, 102, 241, 0.2);
+    padding: 10px 25px;
+    border-radius: 25px;
     font-size: 14px;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #c7d2fe;
 }
 
 .music-panel {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .music-tabs {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .music-tabs li {
@@ -75,54 +87,97 @@ body {
 }
 
 .music-tabs li a {
-    color: #666;
+    color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
+    transition: all 0.3s;
+}
+
+.music-tabs li a:hover {
+    color: #818cf8;
 }
 
 .music-tabs li.am-active a {
-    color: #667eea;
-    font-weight: bold;
+    color: #818cf8;
+    font-weight: 600;
 }
 
 .search-field {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .search-field input {
     font-size: 16px;
-    padding: 15px;
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    transition: all 0.3s;
+}
+
+.search-field input:focus {
+    outline: none;
+    border-color: #818cf8;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-field input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .music-type {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
 }
 
 .music-type label {
-    margin: 0 10px;
+    margin: 0 12px;
     cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s;
+}
+
+.music-type label:hover {
+    color: #818cf8;
+}
+
+.music-type input[type="radio"]:checked + label {
+    color: #818cf8;
+    font-weight: 600;
 }
 
 .music-submit {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     border: none;
-    padding: 15px;
-    font-size: 18px;
+    padding: 16px 32px;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
 }
 
 .music-submit:hover {
-    opacity: 0.9;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
 }
 
 .music-back {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.music-back:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .result-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-bottom: 25px;
 }
 
 .result-field {
@@ -131,38 +186,142 @@ body {
 
 .result-field .am-input-group {
     width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .result-field .am-input-group-label {
-    width: 35px;
-    min-width: 35px;
+    width: 40px;
+    min-width: 40px;
     text-align: center;
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: rgba(99, 102, 241, 0.2);
+    color: #818cf8;
+    border: none;
 }
 
 .result-field .am-form-field {
-    height: 32px;
+    height: 38px;
     font-size: 13px;
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+.result-field .am-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #818cf8;
+}
+
+.result-field .am-btn:hover {
+    background: rgba(99, 102, 241, 0.3);
 }
 
 .player-wrap {
-    margin-top: 20px;
+    margin-top: 25px;
+}
+
+/* APlayer深色主题 */
+#j-player .aplayer {
+    background: rgba(20, 20, 40, 0.9) !important;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+#j-player .aplayer-info {
+    background: rgba(20, 20, 40, 0.95) !important;
+}
+
+#j-player .aplayer-music .aplayer-title {
+    color: #fff !important;
+}
+
+#j-player .aplayer-music .aplayer-author {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+#j-player .aplayer-lrc {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+#j-player .aplayer-lrc .aplayer-lrc-current {
+    color: #818cf8 !important;
+}
+
+#j-player .aplayer-controller {
+    background: rgba(30, 30, 50, 0.95) !important;
+}
+
+#j-player .aplayer-bar {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+#j-player .aplayer-played {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
+}
+
+#j-player .aplayer-thumb {
+    background: #818cf8 !important;
+    border: none !important;
+}
+
+#j-player .aplayer-time {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+#j-player .aplayer-list {
+    background: rgba(20, 20, 40, 0.95) !important;
+}
+
+#j-player .aplayer-list ol li {
+    color: rgba(255, 255, 255, 0.7) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+#j-player .aplayer-list ol li:hover {
+    background: rgba(99, 102, 241, 0.1) !important;
+}
+
+#j-player .aplayer-list ol li.aplayer-list-light {
+    background: rgba(99, 102, 241, 0.2) !important;
+}
+
+#j-player .aplayer-list ol li .aplayer-list-cur {
+    background: #818cf8 !important;
+}
+
+#j-player .aplayer-list ol li .aplayer-list-title {
+    color: #fff !important;
+}
+
+#j-player .aplayer-list ol li .aplayer-list-author {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* APlayer图标颜色 */
+#j-player .aplayer-icon {
+    fill: rgba(255, 255, 255, 0.7) !important;
+}
+
+#j-player .aplayer-icon:hover {
+    fill: #818cf8 !important;
 }
 
 .aplayer-more {
     display: block;
     text-align: center;
-    padding: 10px 20px;
-    margin: 10px 0 0 0;
+    padding: 12px 24px;
+    margin: 15px 0 0 0;
     width: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     color: white;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     transition: all 0.3s ease;
     border: none;
     box-sizing: border-box;
@@ -170,70 +329,60 @@ body {
 
 .aplayer-more:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.aplayer-more:active {
-    transform: translateY(0);
-}
-
-.aplayer-more:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.aplayer-more:active {
-    transform: translateY(0);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
 }
 
 .music-tips {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-top: 20px;
+    background: rgba(30, 30, 60, 0.8);
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .music-tips h2 {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 15px;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 18px;
+    font-weight: 600;
 }
 
 .music-tips p {
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .music-tips blockquote {
-    background: #f8f9fa;
-    border-left: 4px solid #667eea;
-    padding: 15px;
-    border-radius: 0 8px 8px 0;
-    margin: 15px 0;
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 4px solid #818cf8;
+    padding: 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 18px 0;
 }
 
 .music-tips blockquote p {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 13px;
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .music-tips blockquote span {
-    color: #333;
-    font-weight: bold;
+    color: #c7d2fe;
+    font-weight: 500;
 }
 
 .music-tips blockquote b {
-    color: #e74c3c;
+    color: #f87171;
 }
 
 .footer {
-    background: #333;
-    color: #999;
+    background: rgba(15, 15, 35, 0.9);
+    color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    padding: 20px;
+    padding: 25px;
     font-size: 13px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 600px) {
@@ -242,11 +391,11 @@ body {
     }
 
     .brand-mark {
-        font-size: 36px;
+        font-size: 40px;
     }
 
     .brand-copy h1 {
-        font-size: 24px;
+        font-size: 28px;
     }
 
     .music-panel {
@@ -254,7 +403,7 @@ body {
     }
 
     .music-type label {
-        margin: 5px;
+        margin: 6px;
     }
 
     .result-grid {
