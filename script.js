@@ -80,6 +80,7 @@ async function searchMusic() {
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
+                listMaxHeight: 9999,
                 audio: playerList
             });
 
