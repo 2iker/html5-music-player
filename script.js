@@ -130,13 +130,18 @@ async function getSongUrl(id) {
         var data = await response.json();
 
         if (data.code === 200 && data.data && data.data[0] && data.data[0].url) {
-            return data.data[0].url;
+            // 将http改为https，解决Mixed Content问题
+            var audioUrl = data.data[0].url;
+            if (audioUrl.startsWith('http://')) {
+                audioUrl = audioUrl.replace('http://', 'https://');
+            }
+            return audioUrl;
         }
         // 备用方案
-        return 'http://music.163.com/song/media/outer/url?id=' + id + '.mp3';
+        return 'https://music.163.com/song/media/outer/url?id=' + id + '.mp3';
     } catch (error) {
         console.error('获取播放链接失败:', error);
-        return 'http://music.163.com/song/media/outer/url?id=' + id + '.mp3';
+        return 'https://music.163.com/song/media/outer/url?id=' + id + '.mp3';
     }
 }
 
