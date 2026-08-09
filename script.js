@@ -80,7 +80,9 @@ async function searchMusic() {
             });
 
             // 添加载入更多按钮
-            addLoadMoreButton();
+            setTimeout(function() {
+                addLoadMoreButton();
+            }, 100);
         } else {
             alert('未找到相关歌曲，请换个关键词试试');
         }
@@ -184,7 +186,14 @@ async function loadMore() {
 
 // 添加载入更多按钮
 function addLoadMoreButton() {
-    $('.aplayer-more').off('click').on('click', function() {
+    // 移除旧的按钮
+    $('.aplayer-more').remove();
+    
+    // 添加新的按钮
+    var moreBtn = $('<div class="aplayer-more">载入更多（无法播放请换一个试试）</div>');
+    $('#j-player').append(moreBtn);
+    
+    moreBtn.off('click').on('click', function() {
         loadMore();
     });
 }
