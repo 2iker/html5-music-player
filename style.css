@@ -132,74 +132,9 @@ h1 {
     color: #fff;
 }
 
-/* APlayer - 深色主题 */
+/* APlayer - 保留原生样式 */
 .player-wrap {
     margin-top: 20px;
-}
-
-#j-player .aplayer {
-    background-color: #3a3a3a !important;
-    border-radius: 12px;
-    overflow: hidden;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-#j-player .aplayer-info {
-    background-color: #3a3a3a !important;
-}
-
-#j-player .aplayer-list {
-    background-color: #2d2d2d !important;
-    max-height: none !important;
-    height: auto !important;
-}
-
-#j-player .aplayer-list ol li {
-    border-bottom-color: #444 !important;
-    color: #fff !important;
-}
-
-#j-player .aplayer-list ol li.aplayer-list-light {
-    background-color: #444 !important;
-}
-
-#j-player .aplayer-music .aplayer-title {
-    color: #fff !important;
-}
-
-#j-player .aplayer-music .aplayer-author {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-#j-player .aplayer-lrc-contents p {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-#j-player .aplayer-lrc-contents p.aplayer-lrc-current {
-    color: #fff !important;
-}
-
-#j-player .aplayer-time {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-#j-player .aplayer-list ol {
-    scrollbar-width: thin;
-    scrollbar-color: #444 #2d2d2d;
-}
-
-#j-player .aplayer-list ol::-webkit-scrollbar {
-    width: 6px;
-}
-
-#j-player .aplayer-list ol::-webkit-scrollbar-track {
-    background: #2d2d2d;
-}
-
-#j-player .aplayer-list ol::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 3px;
 }
 
 /* 载入更多按钮 */
