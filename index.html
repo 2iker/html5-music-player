@@ -3,83 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音乐解析工具 - 免费音乐下载</title>
+    <title>音乐搜索器 - 免费音乐下载</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎵 音乐解析工具</h1>
-            <p class="subtitle">支持多平台音乐解析下载</p>
+            <h1>🎵 音乐搜索器</h1>
+            <p class="subtitle">CD级音质，让天下没有难搜的歌曲</p>
         </header>
 
         <main>
-            <div class="input-group">
-                <label for="platform">选择平台</label>
-                <select id="platform">
-                    <option value="netease">网易云音乐</option>
-                    <option value="qq">QQ音乐</option>
-                    <option value="kugou">酷狗音乐</option>
-                    <option value="kuwo">酷我音乐</option>
-                </select>
+            <div class="search-tabs">
+                <button class="tab-btn active" data-tab="name">音乐名称</button>
+                <button class="tab-btn" data-tab="id">音乐 ID</button>
+                <button class="tab-btn" data-tab="url">音乐地址</button>
             </div>
 
-            <div class="input-group">
-                <label for="songId">输入歌曲ID或链接</label>
-                <input type="text" id="songId" placeholder="例如: 29004400 或完整链接">
-                <span class="hint" id="hint">网易云音乐歌曲ID，从歌曲页面URL获取</span>
+            <div class="platform-tags">
+                <label>选择平台：</label>
+                <div class="tags">
+                    <span class="tag active" data-platform="netease">网易</span>
+                    <span class="tag" data-platform="qq">QQ</span>
+                    <span class="tag" data-platform="kugou">酷狗</span>
+                    <span class="tag" data-platform="kuwo">酷我</span>
+                    <span class="tag" data-platform="migu">咪咕</span>
+                </div>
             </div>
 
-            <button id="parseBtn" onclick="parseMusic()">解析音乐</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="请输入音乐名称、音乐ID或音乐地址">
+                <button id="searchBtn" onclick="searchMusic()">一键搜索</button>
+            </div>
+
+            <div class="quick-links">
+                <span class="hint">示例：</span>
+                <a href="javascript:void(0)" onclick="fillExample('周杰伦')">周杰伦</a>
+                <a href="javascript:void(0)" onclick="fillExample('晴天')">晴天</a>
+                <a href="javascript:void(0)" onclick="fillExample('29004400')">29004400</a>
+            </div>
 
             <div id="result" class="result hidden">
-                <div class="song-info">
-                    <img id="cover" src="" alt="封面">
+                <div class="result-header">
+                    <h3>搜索结果</h3>
+                    <button onclick="clearResults()" class="btn-clear">清空</button>
+                </div>
+                <div id="resultList" class="result-list"></div>
+            </div>
+
+            <div class="player-section hidden" id="playerSection">
+                <div class="player-info">
+                    <img id="playerCover" src="" alt="封面">
                     <div class="info">
-                        <h3 id="songTitle">-</h3>
-                        <p id="songArtist">-</p>
-                        <p id="songAlbum">-</p>
+                        <h3 id="playerTitle">-</h3>
+                        <p id="playerArtist">-</p>
                     </div>
                 </div>
-
                 <audio id="audioPlayer" controls></audio>
-
-                <div class="actions">
-                    <a id="downloadBtn" href="#" download class="btn-download">下载音乐</a>
-                    <button onclick="copyLink()" class="btn-copy">复制链接</button>
+                <div class="player-actions">
+                    <a id="downloadBtn" href="#" download class="btn-download">下载</a>
+                    <button onclick="copyLink()" class="btn-copy">复制外链</button>
                 </div>
-
                 <div class="share-link">
-                    <label>外链地址：</label>
-                    <input type="text" id="shareLink" readonly>
+                    <input type="text" id="shareLink" readonly placeholder="外链地址">
                 </div>
             </div>
 
             <div class="help-section">
-                <h3>使用说明</h3>
+                <h3>帮助</h3>
                 <div class="help-content">
-                    <div class="help-item">
-                        <h4>网易云音乐</h4>
-                        <p>歌曲ID从URL获取：music.163.com/#/song?id=<strong>29004400</strong></p>
-                    </div>
-                    <div class="help-item">
-                        <h4>QQ音乐</h4>
-                        <p>歌曲ID从URL获取：y.qq.com/n/yqq/song/<strong>003OUlho2HcRHC</strong>.html</p>
-                    </div>
-                    <div class="help-item">
-                        <h4>酷狗音乐</h4>
-                        <p>歌曲Hash从URL获取：kugou.com/song/#hash=<strong>08228af3cb404e8a4e7e9871bf543ff6</strong></p>
-                    </div>
-                    <div class="help-item">
-                        <h4>酷我音乐</h4>
-                        <p>歌曲ID从URL获取：kuwo.cn/play_detail/<strong>68279255</strong></p>
-                    </div>
+                    <p><strong>标红</strong> 为 <strong>音乐 ID</strong></p>
+                    <p>支持平台：<span class="platform-list">网易、QQ、酷狗、酷我、咪咕</span></p>
+                    <p>输入音乐名称即可搜索，点击结果可在线播放</p>
                 </div>
             </div>
         </main>
 
         <footer>
+            <p>本站音频文件来自各网站接口，本站不提供任何音频存储服务</p>
             <p>仅供学习交流使用，请支持正版音乐</p>
         </footer>
     </div>
