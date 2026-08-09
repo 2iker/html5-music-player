@@ -227,123 +227,14 @@ body {
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-/* APlayer深色主题 */
+/* APlayer - 保持默认样式 */
 #aplayer .aplayer {
-    background: rgba(30, 30, 50, 0.9) !important;
-    border-radius: 14px;
     margin: 0;
 }
 
-#aplayer .aplayer-info {
-    background: rgba(30, 30, 50, 0.95) !important;
-    padding: 12px 16px;
-}
-
-#aplayer .aplayer-music {
-    margin-bottom: 6px;
-}
-
-#aplayer .aplayer-title {
-    color: #fff !important;
-    font-weight: 500;
-}
-
-#aplayer .aplayer-author {
-    color: rgba(255, 255, 255, 0.5) !important;
-}
-
-#aplayer .aplayer-lrc {
-    height: 36px;
-}
-
-#aplayer .aplayer-lrc-contents p {
-    color: rgba(255, 255, 255, 0.5) !important;
-    font-size: 12px;
-}
-
-#aplayer .aplayer-lrc-contents p.aplayer-lrc-current {
-    color: #818cf8 !important;
-}
-
-#aplayer .aplayer-bar {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-#aplayer .aplayer-loaded {
-    background: rgba(255, 255, 255, 0.15) !important;
-}
-
-#aplayer .aplayer-played {
-    background: linear-gradient(90deg, #667eea, #764ba2) !important;
-}
-
-#aplayer .aplayer-thumb {
-    width: 12px;
-    height: 12px;
-    background: #818cf8 !important;
-    border: none !important;
-    margin-top: -4px;
-}
-
-#aplayer .aplayer-time {
-    color: rgba(255, 255, 255, 0.5) !important;
-    font-size: 12px;
-}
-
-#aplayer .aplayer-icon {
-    fill: rgba(255, 255, 255, 0.6) !important;
-    width: 20px;
-    height: 20px;
-}
-
-#aplayer .aplayer-icon:hover {
-    fill: #818cf8 !important;
-}
-
-#aplayer .aplayer-volume-bar {
-    background: rgba(255, 255, 255, 0.1) !important;
-    height: 4px;
-}
-
-#aplayer .aplayer-volume {
-    background: #818cf8 !important;
-}
-
 #aplayer .aplayer-list {
-    background: rgba(20, 20, 40, 0.98) !important;
     max-height: none !important;
     height: auto !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-#aplayer .aplayer-list ol li {
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    transition: background 0.2s;
-}
-
-#aplayer .aplayer-list ol li:hover {
-    background: rgba(102, 126, 234, 0.1) !important;
-}
-
-#aplayer .aplayer-list ol li.aplayer-list-light {
-    background: rgba(102, 126, 234, 0.15) !important;
-}
-
-#aplayer .aplayer-list-title {
-    color: #fff !important;
-    font-size: 13px;
-}
-
-#aplayer .aplayer-list-author {
-    color: rgba(255, 255, 255, 0.4) !important;
-    font-size: 12px;
-}
-
-#aplayer .aplayer-list-cur {
-    background: #818cf8 !important;
-    width: 3px;
 }
 
 /* 载入更多按钮 */
