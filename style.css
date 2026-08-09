@@ -372,6 +372,28 @@ body {
     background: rgba(102, 126, 234, 0.3);
 }
 
+.btn-back-bottom {
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-back-bottom:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
 /* 底部 */
 .footer {
     text-align: center;

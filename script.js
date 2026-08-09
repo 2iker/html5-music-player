@@ -30,15 +30,11 @@ async function searchMusic() {
             songsList = data;
             playerList = convertToPlayerList(data);
 
-            // 显示歌曲列表
-            displaySongList(data);
-
             // 创建播放器
-            createPlayer(data[0]);
+            createPlayer(data);
 
             // 切换界面
             document.getElementById('searchSection').classList.add('hidden');
-            document.getElementById('listSection').classList.remove('hidden');
             document.getElementById('playerSection').classList.remove('hidden');
         } else {
             alert('未找到相关歌曲');
@@ -52,52 +48,20 @@ async function searchMusic() {
     }
 }
 
-// 显示歌曲列表
-function displaySongList(songs) {
-    const listEl = document.getElementById('songList');
-    listEl.innerHTML = songs.map((song, index) => {
-        const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-        return `
-            <div class="song-item" onclick="playSong(${index})">
-                <span class="index">${index + 1}</span>
-                <div class="info">
-                    <h4>${escapeHtml(song.name)}</h4>
-                    <p>${escapeHtml(artists)}</p>
-                </div>
-                <button class="btn-play" onclick="event.stopPropagation(); playSong(${index})">播放</button>
-            </div>
-        `;
-    }).join('');
-}
-
-// 播放歌曲
-function playSong(index) {
-    if (index >= 0 && index < songsList.length) {
-        createPlayer(songsList[index]);
-    }
-}
-
 // 创建播放器
-function createPlayer(song) {
-    const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-    const picUrl = song.al && song.al.picUrl ? song.al.picUrl.replace('http://', 'https://') : '';
-    const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+function createPlayer(songs) {
+    const firstSong = songs[0];
+    const artists = firstSong.ar ? firstSong.ar.map(a => a.name).join('/') : '未知';
 
     // 更新歌曲信息
-    document.getElementById('songTitle').textContent = song.name;
-    document.getElementById('songArtist').textContent = artists;
-    document.getElementById('songId').textContent = song.id;
-    document.getElementById('songLink').href = `https://music.163.com/#/song?id=${song.id}`;
-    document.getElementById('songUrl').value = audioUrl;
-    document.getElementById('downloadBtn').href = audioUrl;
-    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
+    updateSongInfo(firstSong, artists);
 
     // 销毁旧播放器
     if (player) {
         player.destroy();
     }
 
-    // 创建新播放器
+    // 创建新播放器（使用所有歌曲）
     player = new APlayer({
         container: document.getElementById('aplayer'),
         mini: false,
@@ -107,12 +71,25 @@ function createPlayer(song) {
         preload: 'auto',
         volume: 0.7,
         listmaxheight: 9999,
-        audio: [{
-            name: song.name,
-            artist: artists,
-            url: audioUrl,
-            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
-        }]
+        audio: playerList
+    });
+
+    // 监听歌曲切换
+    player.on('listswitch', function(data) {
+        if (data.index >= 0 && data.index < songsList.length) {
+            const song = songsList[data.index];
+            const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+            updateSongInfo(song, artists);
+        }
+    });
+
+    player.on('play', function() {
+        const index = player.list.index;
+        if (index >= 0 && index < songsList.length) {
+            const song = songsList[index];
+            const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
+            updateSongInfo(song, artists);
+        }
     });
 
     // 错误处理
@@ -127,6 +104,19 @@ function createPlayer(song) {
     });
 
     player.on('canplay', () => errorCount = 0);
+}
+
+// 更新歌曲信息
+function updateSongInfo(song, artists) {
+    const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+
+    document.getElementById('songTitle').textContent = song.name;
+    document.getElementById('songArtist').textContent = artists;
+    document.getElementById('songId').textContent = song.id;
+    document.getElementById('songLink').href = `https://music.163.com/#/song?id=${song.id}`;
+    document.getElementById('songUrl').value = audioUrl;
+    document.getElementById('downloadBtn').href = audioUrl;
+    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
 }
 
 // 获取歌曲列表
@@ -174,21 +164,12 @@ async function loadMore() {
 
         if (data && data.length > 0) {
             songsList = songsList.concat(data);
-            const newItems = data.map((song, i) => {
-                const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-                const index = songsList.length - data.length + i + 1;
-                return `
-                    <div class="song-item" onclick="playSong(${index - 1})">
-                        <span class="index">${index}</span>
-                        <div class="info">
-                            <h4>${escapeHtml(song.name)}</h4>
-                            <p>${escapeHtml(artists)}</p>
-                        </div>
-                        <button class="btn-play" onclick="event.stopPropagation(); playSong(${index - 1})">播放</button>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('songList').insertAdjacentHTML('beforeend', newItems);
+            const newMusicList = convertToPlayerList(data);
+
+            // 使用APlayer的add方法添加歌曲
+            newMusicList.forEach(music => {
+                player.list.add(music);
+            });
 
             if (data.length < 10) {
                 btn.textContent = '没有更多了';
@@ -214,7 +195,6 @@ async function loadMore() {
 function backToSearch() {
     if (player) player.pause();
     document.getElementById('searchSection').classList.remove('hidden');
-    document.getElementById('listSection').classList.add('hidden');
     document.getElementById('playerSection').classList.add('hidden');
 }
 
@@ -239,13 +219,6 @@ function showNotice(text) {
     notice.textContent = text;
     notice.classList.remove('hidden');
     setTimeout(() => notice.classList.add('hidden'), 2000);
-}
-
-// HTML转义
-function escapeHtml(text) {
-    if (!text) return '';
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-    return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 // 回车搜索
