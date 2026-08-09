@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -154,6 +154,8 @@ h1 {
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
+    background: #3a3a3a;
+    box-shadow: none;
 }
 
 .player-wrap .aplayer,
@@ -164,6 +166,16 @@ h1 {
 .player-wrap .aplayer .aplayer-title,
 .player-wrap .aplayer-list ol li {
     color: #f5f5f5;
+}
+.player-wrap .aplayer .aplayer-lrc:before,
+.player-wrap .aplayer .aplayer-lrc:after {
+    background: none;
+}
+.player-wrap .aplayer.aplayer-withlist .aplayer-info {
+    border-bottom: none;
+}
+.player-wrap .aplayer-list ol li {
+    border-top-color: #4a4a4a;
 }
 
 .player-wrap .aplayer .aplayer-author,
