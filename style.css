@@ -44,7 +44,7 @@ h1 {
     display: flex;
     width: 100%;
     max-width: 500px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
 }
 
 .search-input {
