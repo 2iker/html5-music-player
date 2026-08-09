@@ -140,39 +140,45 @@ async function loadMore() {
     // 显示加载中
     $('#j-more').text('加载中...').css('pointer-events', 'none');
 
-    // 保存当前滚动位置和播放索引
+    // 保存当前滚动位置
     var scrollPos = $('.aplayer-list').scrollTop();
-    var currentPlayIndex = player.playIndex;
 
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
 
         if (data && data.length > 0) {
-            var newMusicList = convertToPlayerList(data, '');
-
-            // 直接在DOM中添加新的歌曲项
+            // 直接在ol中添加新的li
             var ol = $('.aplayer-list ol');
             var startIndex = playerList.length;
 
             for (var i = 0; i < data.length; i++) {
                 var song = data[i];
                 var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+
+                // 构建li元素，与APlayer原生格式一致
                 var li = $('<li>' +
-                    '<span class="aplayer-list-cur"></span>' +
+                    '<span class="aplayer-list-cur" style="background-color: rgb(14, 144, 210);"></span>' +
                     '<span class="aplayer-list-index">' + (startIndex + i + 1) + '</span>' +
                     '<span class="aplayer-list-title">' + song.name + '</span>' +
                     '<span class="aplayer-list-author">' + artists + '</span>' +
                     '</li>');
                 ol.append(li);
 
-                // 添加到播放列表
-                playerList.push(newMusicList[i]);
+                // 添加到播放列表数据
+                var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
+                playerList.push({
+                    name: song.name,
+                    artist: artists,
+                    url: 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3',
+                    cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
+                    lrc: ''
+                });
             }
 
             // 恢复滚动位置
             setTimeout(function() {
                 $('.aplayer-list').scrollTop(scrollPos);
-            }, 100);
+            }, 50);
 
             // 更新按钮状态
             if (data.length < 10) {
