@@ -1,4 +1,4 @@
-﻿// API配置
+// API配置
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
 let player = null;
@@ -8,47 +8,6 @@ let searchKeyword = '';
 let currentPage = 1;
 let isLoadMore = false;
 let noMore = false;
-
-// 搜索音乐
-async function searchMusic() {
-    searchKeyword = document.getElementById('searchInput').value.trim();
-    if (!searchKeyword) {
-        showNotice('请输入搜索内容');
-        return;
-    }
-
-    currentPage = 1;
-    const searchBtn = document.getElementById('searchBtn');
-    searchBtn.textContent = '搜索中...';
-    searchBtn.disabled = true;
-
-    try {
-        const data = await fetchSongs(searchKeyword, currentPage);
-
-        if (data && data.length > 0) {
-            songsList = data;
-            playerList = await convertToPlayerList(data);
-
-            // 创建播放器
-            createPlayer(data);
-
-            // 显示播放器
-            document.getElementById('searchSection').classList.add('hidden');
-            document.getElementById('playerSection').classList.remove('hidden');
-            document.getElementById('loadMoreBtn').classList.remove('hidden');
-            noMore = false;
-            document.getElementById('loadMoreBtn').textContent = '载入更多';
-        } else {
-            showNotice('未找到相关歌曲');
-        }
-    } catch (error) {
-        console.error('搜索失败:', error);
-        showNotice('搜索失败，请重试');
-    } finally {
-        searchBtn.textContent = '搜索';
-        searchBtn.disabled = false;
-    }
-}
 
 // 创建播放器
 function createPlayer(songs) {
@@ -226,13 +185,6 @@ async function loadMore() {
     }
 }
 
-// 返回搜索
-function backToSearch() {
-    if (player) player.pause();
-    document.getElementById('searchSection').classList.remove('hidden');
-    document.getElementById('playerSection').classList.add('hidden');
-}
-
 // 结果页搜索
 async function searchMusic2() {
     searchKeyword = document.getElementById('searchInput2').value.trim();
@@ -255,6 +207,9 @@ async function searchMusic2() {
 
             // 创建播放器
             createPlayer(data);
+
+            // 显示结果面板
+            document.getElementById('j-main').classList.remove('hidden');
 
             // 更新载入更多按钮
             document.getElementById('loadMoreBtn').classList.remove('hidden');
@@ -279,14 +234,6 @@ function showNotice(text) {
     notice.classList.remove('hidden');
     setTimeout(() => notice.classList.add('hidden'), 2000);
 }
-
-// 回车搜索
-document.getElementById('searchInput').addEventListener('keypress', e => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        searchMusic();
-    }
-});
 
 // 结果页回车搜索
 document.getElementById('searchInput2').addEventListener('keypress', e => {

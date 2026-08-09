@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music - 免费音乐搜索</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amazeui@2.7.2/dist/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
@@ -16,28 +15,8 @@
         <h1>Music</h1>
         <p class="subtitle">免费音乐搜索 · 在线播放 · 一键下载</p>
 
-        <!-- 搜索框 -->
-        <div id="searchSection" class="search-wrap">
-            <input 
-                id="searchInput"
-                type="text" 
-                placeholder="搜索歌曲、歌手、专辑..."
-                class="search-input"
-            >
-            <button 
-                id="searchBtn"
-                onclick="searchMusic()"
-                class="search-btn"
-            >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                </svg>
-            </button>
-        </div>
-
         <!-- 结果区域 -->
-        <div id="playerSection" class="player-section hidden">
+        <div id="playerSection" class="player-section">
             <!-- 搜索框 -->
             <div class="search-wrap">
                 <input 
@@ -59,7 +38,7 @@
             </div>
 
             <!-- j-main 保持原样式 -->
-            <form id="j-main" class="am-form music-main music-panel result-panel">
+            <form id="j-main" class="am-form music-main music-panel result-panel hidden">
                 <div class="result-grid">
                     <div class="am-input-group am-input-group-sm result-field">
                         <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
