@@ -34,9 +34,22 @@
 
         <!-- 结果区域 -->
         <div id="playerSection" class="player-section hidden">
-            <button onclick="backToSearch()" class="back-btn">
-                ← 返回搜索
-            </button>
+            <!-- 搜索框 -->
+            <div class="search-wrap" style="margin-bottom: 20px;">
+                <input 
+                    id="searchInput2"
+                    type="text" 
+                    placeholder="搜索歌曲、歌手、专辑..."
+                    class="search-input"
+                >
+                <button 
+                    id="searchBtn2"
+                    onclick="searchMusic2()"
+                    class="search-btn"
+                >
+                    搜索
+                </button>
+            </div>
 
             <!-- j-main 保持原样式 -->
             <form id="j-main" class="am-form music-main music-panel result-panel">

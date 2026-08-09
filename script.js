@@ -201,6 +201,45 @@ function backToSearch() {
     document.getElementById('playerSection').classList.add('hidden');
 }
 
+// 结果页搜索
+async function searchMusic2() {
+    searchKeyword = document.getElementById('searchInput2').value.trim();
+    if (!searchKeyword) {
+        alert('请输入搜索内容');
+        return;
+    }
+
+    currentPage = 1;
+    const searchBtn = document.getElementById('searchBtn2');
+    searchBtn.textContent = '搜索中...';
+    searchBtn.disabled = true;
+
+    try {
+        const data = await fetchSongs(searchKeyword, currentPage);
+
+        if (data && data.length > 0) {
+            songsList = data;
+            playerList = convertToPlayerList(data);
+
+            // 创建播放器
+            createPlayer(data);
+
+            // 更新载入更多按钮
+            document.getElementById('loadMoreBtn').classList.remove('hidden');
+            noMore = false;
+            document.getElementById('loadMoreBtn').textContent = '载入更多';
+        } else {
+            alert('未找到相关歌曲');
+        }
+    } catch (error) {
+        console.error('搜索失败:', error);
+        alert('搜索失败，请重试');
+    } finally {
+        searchBtn.textContent = '搜索';
+        searchBtn.disabled = false;
+    }
+}
+
 // 显示提示
 function showNotice(text) {
     const notice = document.getElementById('notice');
@@ -214,5 +253,13 @@ document.getElementById('searchInput').addEventListener('keypress', e => {
     if (e.key === 'Enter') {
         e.preventDefault();
         searchMusic();
+    }
+});
+
+// 结果页回车搜索
+document.getElementById('searchInput2').addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        searchMusic2();
     }
 });
