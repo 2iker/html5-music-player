@@ -197,7 +197,6 @@ async function searchMusic2() {
     const searchBtn = document.getElementById('searchBtn2');
     searchBtn.classList.add('loading');
     searchBtn.disabled = true;
-    document.getElementById('githubLink').classList.add('hidden');
 
     try {
         const data = await fetchSongs(searchKeyword, currentPage);
@@ -209,8 +208,9 @@ async function searchMusic2() {
             // 创建播放器
             createPlayer(data);
 
-            // 显示结果面板
+            // 显示结果面板，隐藏GitHub链接
             document.getElementById('j-main').classList.remove('hidden');
+            document.getElementById('githubLink').classList.add('hidden');
 
             // 更新载入更多按钮
             document.getElementById('loadMoreBtn').classList.remove('hidden');
@@ -218,7 +218,6 @@ async function searchMusic2() {
             document.getElementById('loadMoreBtn').textContent = '载入更多';
         } else {
             showNotice('未找到相关歌曲');
-            document.getElementById('githubLink').classList.remove('hidden');
         }
     } catch (error) {
         console.error('搜索失败:', error);
