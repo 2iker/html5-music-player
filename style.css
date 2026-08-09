@@ -136,16 +136,18 @@ h1 {
     margin: 0;
 }
 
-.result-field .am-input-group {
+.result-grid .am-input-group,
+.result-field.am-input-group {
     width: 100%;
     background: #191a1c;
-    border: 1px solid #3a3f44;
+    border: 1px solid #4a5568;
     border-radius: 8px;
     transition: border-color .2s ease;
 }
 
-.result-field .am-input-group:hover {
-    border-color: #4a5568;
+.result-grid .am-input-group:hover,
+.result-field.am-input-group:hover {
+    border-color: #6b7c93;
 }
 
 .result-field .am-input-group-label {
