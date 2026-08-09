@@ -186,14 +186,8 @@ async function loadMore() {
 
 // 添加载入更多按钮
 function addLoadMoreButton() {
-    // 移除旧的按钮
-    $('.aplayer-more').remove();
-    
-    // 添加新的按钮
-    var moreBtn = $('<div class="aplayer-more">载入更多（无法播放请换一个试试）</div>');
-    $('#j-player').append(moreBtn);
-    
-    moreBtn.off('click').on('click', function() {
+    $('#j-more').show();
+    $('#j-more').off('click').on('click', function() {
         loadMore();
     });
 }
