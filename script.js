@@ -140,8 +140,9 @@ async function loadMore() {
     // 显示加载中
     $('#j-more').text('加载中...').css('pointer-events', 'none');
 
-    // 保存当前滚动位置
+    // 保存当前滚动位置和播放索引
     var scrollPos = $('.aplayer-list').scrollTop();
+    var currentPlayIndex = player.playIndex;
 
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
@@ -149,10 +150,23 @@ async function loadMore() {
         if (data && data.length > 0) {
             var newMusicList = convertToPlayerList(data, '');
 
-            // 添加到播放列表
-            for (var i = 0; i < newMusicList.length; i++) {
+            // 直接在DOM中添加新的歌曲项
+            var ol = $('.aplayer-list ol');
+            var startIndex = playerList.length;
+
+            for (var i = 0; i < data.length; i++) {
+                var song = data[i];
+                var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+                var li = $('<li>' +
+                    '<span class="aplayer-list-cur"></span>' +
+                    '<span class="aplayer-list-index">' + (startIndex + i + 1) + '</span>' +
+                    '<span class="aplayer-list-title">' + song.name + '</span>' +
+                    '<span class="aplayer-list-author">' + artists + '</span>' +
+                    '</li>');
+                ol.append(li);
+
+                // 添加到播放列表
                 playerList.push(newMusicList[i]);
-                player.addMusic(newMusicList[i]);
             }
 
             // 恢复滚动位置
