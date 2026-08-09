@@ -1,10 +1,8 @@
 /* j-main - 保持原样式 */
 .music-panel {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
+    background: #1c1917;
+    border: 1px solid #292524;
+    border-radius: 16px;
     padding: 28px;
     margin-bottom: 24px;
 }
@@ -26,9 +24,9 @@
 
 .result-field .am-input-group {
     width: 100%;
-    background: rgba(255, 255, 255, 0.1);
+    background: #292524;
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid #44403c;
 }
 
 .result-field .am-input-group-label {
@@ -37,7 +35,7 @@
     text-align: center;
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: #d97706;
 }
 
 .result-field .am-form-field {
@@ -45,7 +43,7 @@
     font-size: 13px;
     background: transparent;
     border: none;
-    color: white;
+    color: #fafaf9;
 }
 
 /* APlayer - 保持默认样式 */
@@ -65,7 +63,7 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 14px 28px;
-    background: rgba(239, 68, 68, 0.9);
+    background: rgba(220, 38, 38, 0.9);
     backdrop-filter: blur(10px);
     color: white;
     border-radius: 12px;
