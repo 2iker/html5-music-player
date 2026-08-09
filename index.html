@@ -30,44 +30,71 @@
                     </svg>
                 </button>
             </div>
-            <div class="platform-tags">
-                <span class="tag active" data-platform="netease">网易云</span>
-            </div>
         </section>
 
         <!-- 播放器区域 -->
         <section id="playerSection" class="player-section hidden">
-            <div class="song-info-card">
-                <div class="song-details">
-                    <h2 id="songTitle">-</h2>
-                    <p id="songArtist">-</p>
-                </div>
-                <div class="song-meta">
-                    <div class="meta-item">
-                        <span class="meta-label">ID</span>
-                        <span id="songId" class="meta-value">-</span>
+            <button onclick="backToSearch()" class="btn-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+                返回搜索
+            </button>
+
+            <!-- 结果网格 -->
+            <div class="result-grid">
+                <div class="meta-item">
+                    <span class="meta-label">音乐地址</span>
+                    <div class="meta-value-box">
+                        <a id="songLink" href="#" target="_blank" class="meta-link">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
-                    <div class="meta-item">
-                        <span class="meta-label">链接</span>
-                        <a id="songLink" href="#" target="_blank" class="meta-link">查看</a>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">音乐链接</span>
+                    <div class="meta-value-box">
+                        <a id="downloadBtn" href="#" download class="meta-link">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </a>
                     </div>
                 </div>
-                <div class="song-actions">
-                    <button onclick="copyUrl(document.getElementById('songUrl').value)" class="btn-action">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                        复制链接
-                    </button>
-                    <a id="downloadBtn" href="#" download class="btn-action btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        下载
-                    </a>
+                <div class="meta-item">
+                    <span class="meta-label">音乐ID</span>
+                    <div class="meta-value-box">
+                        <span id="songId" class="meta-text">-</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">音乐名称</span>
+                    <div class="meta-value-box">
+                        <span id="songTitle" class="meta-text">-</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">音乐作者</span>
+                    <div class="meta-value-box">
+                        <span id="songArtist" class="meta-text">-</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">复制链接</span>
+                    <div class="meta-value-box">
+                        <button onclick="copyUrl(document.getElementById('songUrl').value)" class="meta-link">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 <input type="hidden" id="songUrl">
             </div>
@@ -82,14 +109,6 @@
 
             <!-- 提示信息 -->
             <div id="notice" class="notice hidden"></div>
-
-            <!-- 返回按钮 -->
-            <button onclick="backToSearch()" class="btn-back-bottom">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
-                返回搜索
-            </button>
         </section>
 
         <!-- 底部信息 -->

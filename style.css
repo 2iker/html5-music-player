@@ -227,6 +227,60 @@ body {
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
+/* 结果网格 */
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.meta-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.meta-value-box {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    min-height: 40px;
+}
+
+.meta-text {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    word-break: break-all;
+}
+
+.meta-link {
+    color: #818cf8;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.meta-link:hover {
+    text-decoration: underline;
+}
+
 /* APlayer - 保持默认样式 */
 #aplayer .aplayer {
     margin: 0;
