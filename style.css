@@ -81,6 +81,11 @@ h3 {
     margin: 0 auto;
 }
 
+/* 结果区域内的搜索框 */
+.player-section .search-wrap {
+    justify-content: center;
+}
+
 /* j-main - 保持原样式 */
 .music-panel {
     background: white;
