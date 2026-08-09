@@ -80,13 +80,13 @@ async function searchMusic() {
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
-                listMaxHeight: 9999,
+                listmaxheight: 9999,
                 audio: playerList
             });
 
             // 更新歌曲信息的函数
-            function updateCurrentSongInfo() {
-                var index = player.list.index;
+            function updateCurrentSongInfo(index) {
+                if (index === undefined) index = player.list.index;
                 if (index >= 0 && index < songsList.length) {
                     var song = songsList[index];
                     var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
@@ -103,12 +103,19 @@ async function searchMusic() {
             }
 
             // 监听播放列表切换事件
-            player.on('listswitch', function() {
-                setTimeout(updateCurrentSongInfo, 50);
+            player.on('listswitch', function(data) {
+                setTimeout(function() {
+                    updateCurrentSongInfo(data.index);
+                }, 100);
+            });
+
+            // 监听播放事件
+            player.on('play', function() {
+                updateCurrentSongInfo();
             });
 
             // 初始更新
-            updateCurrentSongInfo();
+            updateCurrentSongInfo(0);
 
             // 添加载入更多按钮
             setTimeout(function() {
