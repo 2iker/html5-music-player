@@ -1,62 +1,57 @@
-# 🎵 音乐解析工具
+# 🎵 HTML5 Music Player
 
-免费的在线音乐解析下载工具，支持多平台音乐解析。
+基于 [APlayer](https://github.com/DIYgod/APlayer) 魔改的 HTML5 音乐播放器，支持搜索、在线播放与滚动歌词。
+
+在线体验：<https://2iker.github.io/html5-music-player/>
 
 ## 功能特性
 
-- ✅ 支持网易云音乐
-- ✅ 支持QQ音乐
-- ✅ 支持酷狗音乐
-- ✅ 支持酷我音乐
-- ✅ 在线播放
-- ✅ 一键下载
-- ✅ 复制外链
-- ✅ 响应式设计
+- 🔍 网易云音乐搜索（关键词搜索歌曲/歌手/专辑）
+- ▶️ 在线播放（APlayer 播放器，列表模式 + 歌词滚动）
+- 📃 滚动歌词同步显示
+- ⏳ 载入更多（分页加载更多搜索结果）
+- 📱 响应式设计，适配桌面与移动端
+- 🌙 深色主题风格
+- ℹ️ 歌曲信息展示（链接、音频源、歌曲 ID、歌词、名称、歌手）
 
-## 使用方法
+## 技术栈
 
-1. 选择音乐平台
-2. 输入歌曲ID或链接
-3. 点击"解析音乐"
-4. 在线播放或下载
+- 前端：原生 HTML / CSS / JavaScript
+- 播放器：[APlayer](https://github.com/DIYgod/APlayer)
+- UI 组件：[AmazeUI](https://amazeui.org/)
+- 后端 API：网易云音乐第三方接口（Vercel 代理）
 
-## 获取歌曲ID
+## 快速开始
 
-### 网易云音乐
-访问歌曲页面，URL中的数字即为歌曲ID：
-```
-https://music.163.com/#/song?id=29004400
-```
+### 本地运行
 
-### QQ音乐
-访问歌曲页面，URL中的字符串即为歌曲mid：
-```
-https://y.qq.com/n/yqq/song/003OUlho2HcRHC.html
+直接打开 `index.html` 即可，或使用任意静态服务器：
+
+```bash
+python -m http.server 8080
+# 或
+npx serve .
 ```
 
-### 酷狗音乐
-访问歌曲页面，URL中的hash值：
-```
-http://www.kugou.com/song/#hash=08228af3cb404e8a4e7e9871bf543ff6
-```
+### 部署到 GitHub Pages
 
-### 酷我音乐
-访问歌曲页面，URL中的数字即为歌曲ID：
-```
-https://www.kuwo.cn/play_detail/68279255
-```
+1. Fork 本仓库
+2. 进入仓库 Settings → Pages
+3. Source 选择 `main` 分支
+4. 点击 Save
 
-## 部署到GitHub Pages
+## 项目结构
 
-1. Fork本仓库
-2. 进入仓库设置 (Settings)
-3. 选择 Pages
-4. Source 选择 main 分支
-5. 点击 Save
+```
+├── index.html    # 页面结构
+├── style.css     # 样式（深色主题 + 响应式）
+├── script.js     # 搜索/播放/歌词逻辑
+└── README.md
+```
 
 ## 免责声明
 
-本工具仅供学习交流使用，请支持正版音乐。所有音频资源来自互联网，版权归原作者所有。
+本项目仅供个人学习交流使用，请支持正版音乐。音频与歌词资源来自互联网，版权归原作者所有。
 
 ## License
 
