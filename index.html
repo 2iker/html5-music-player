@@ -4,83 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐搜索器 - 免费音乐下载</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amazeui@2.7.2/dist/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎵 音乐搜索器</h1>
-            <p class="subtitle">CD级音质，让天下没有难搜的歌曲</p>
-        </header>
-
-        <main>
-            <div class="search-tabs">
-                <button class="tab-btn active" data-tab="name">音乐名称</button>
-                <button class="tab-btn" data-tab="id">音乐 ID</button>
-                <button class="tab-btn" data-tab="url">音乐地址</button>
-            </div>
-
-            <div class="platform-tags">
-                <label>选择平台：</label>
-                <div class="tags">
-                    <span class="tag active" data-platform="netease">网易</span>
-                    <span class="tag" data-platform="qq">QQ</span>
-                    <span class="tag" data-platform="kugou">酷狗</span>
-                    <span class="tag" data-platform="kuwo">酷我</span>
-                    <span class="tag" data-platform="migu">咪咕</span>
+    <section class="about">
+        <div class="am-container page-shell">
+            <header class="hero">
+                <div class="brand-lockup">
+                    <span class="brand-mark">🎵</span>
+                    <div class="brand-copy">
+                        <h1 class="about-title">音乐搜索器</h1>
+                        <p>CD级音质，让天下没有难搜的歌曲</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="请输入音乐名称、音乐ID或音乐地址">
-                <button id="searchBtn" onclick="searchMusic()">一键搜索</button>
-            </div>
-
-            <div class="quick-links">
-                <span class="hint">示例：</span>
-                <a href="javascript:void(0)" onclick="fillExample('周杰伦')">周杰伦</a>
-                <a href="javascript:void(0)" onclick="fillExample('晴天')">晴天</a>
-                <a href="javascript:void(0)" onclick="fillExample('29004400')">29004400</a>
-            </div>
-
-            <div id="result" class="result hidden">
-                <div class="result-header">
-                    <h3>搜索结果</h3>
-                    <button onclick="clearResults()" class="btn-clear">清空</button>
+                <div class="hero-badge">
+                    🎧 多平台搜索
                 </div>
-                <div id="resultList" class="result-list"></div>
-            </div>
+            </header>
 
-            <div class="player-section hidden" id="playerSection">
-                <h3>正在播放</h3>
-                <div id="aplayer"></div>
-                <div class="player-actions">
-                    <a id="downloadBtn" href="#" download class="btn-download">下载</a>
-                    <button onclick="copyLink()" class="btn-copy">复制外链</button>
-                </div>
-                <div class="share-link">
-                    <input type="text" id="shareLink" readonly placeholder="外链地址">
-                </div>
-            </div>
+            <main class="music-layout">
+                <form id="searchForm" class="am-form music-panel search-panel">
+                    <ul id="searchTabs" class="am-nav am-nav-pills am-nav-justify music-tabs">
+                        <li class="am-active" data-filter="name">
+                            <a>音乐名称</a>
+                        </li>
+                        <li data-filter="id">
+                            <a>音乐 ID</a>
+                        </li>
+                        <li data-filter="url">
+                            <a>音乐地址</a>
+                        </li>
+                    </ul>
+                    <div class="am-form-group search-field">
+                        <input id="searchInput" class="am-form-field am-input-lg am-radius" placeholder="例如: 周杰伦 晴天" required>
+                    </div>
+                    <div id="platformSelect" class="am-form-group music-type">
+                        <label class="am-radio-inline">
+                            <input type="radio" name="music_type" value="netease" checked> 网易
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" name="music_type" value="qq"> QQ
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" name="music_type" value="kugou"> 酷狗
+                        </label>
+                        <label class="am-radio-inline">
+                            <input type="radio" name="music_type" value="kuwo"> 酷我
+                        </label>
+                    </div>
+                    <button type="submit" class="am-btn am-btn-primary am-btn-lg am-btn-block am-radius music-submit">
+                        ⚡ 一键搜索
+                    </button>
+                </form>
 
-            <div class="help-section">
-                <h3>帮助</h3>
-                <div class="help-content">
-                    <p><strong>标红</strong> 为 <strong>音乐 ID</strong></p>
-                    <p>支持平台：<span class="platform-list">网易、QQ、酷狗、酷我、咪咕</span></p>
-                    <p>输入音乐名称即可搜索，点击结果可在线播放</p>
-                </div>
-            </div>
-        </main>
+                <form id="resultForm" class="am-form music-main music-panel result-panel" style="display:none;">
+                    <button type="button" id="backBtn" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back">
+                        ↩ 返回搜索
+                    </button>
+                    <div class="result-grid">
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label">🔗</span>
+                            <input id="linkInput" class="am-form-field" readonly>
+                            <span class="am-input-group-btn">
+                                <a id="linkBtn" class="am-btn am-btn-default" target="_blank">↗</a>
+                            </span>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label">🎵</span>
+                            <input id="srcInput" class="am-form-field" readonly>
+                            <span class="am-input-group-btn">
+                                <a id="srcBtn" class="am-btn am-btn-default" target="_blank">⬇</a>
+                            </span>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label">🆔</span>
+                            <input id="idInput" class="am-form-field" readonly>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label">📝</span>
+                            <input id="nameInput" class="am-form-field" readonly>
+                        </div>
+                        <div class="am-input-group am-input-group-sm result-field">
+                            <span class="am-input-group-label">👤</span>
+                            <input id="authorInput" class="am-form-field" readonly>
+                        </div>
+                    </div>
+                    <div class="player-wrap">
+                        <div id="aplayer"></div>
+                    </div>
+                </form>
+            </main>
 
-        <footer>
-            <p>本站音频文件来自各网站接口，本站不提供任何音频存储服务</p>
-            <p>仅供学习交流使用，请支持正版音乐</p>
-        </footer>
-    </div>
+            <section class="music-tips">
+                <h2>帮助</h2>
+                <p><b>标红</b> 为 <strong>音乐 ID</strong></p>
+                <blockquote>
+                    <p><span>网易：</span>https://music.163.com/#/song?id=<b>25906124</b></p>
+                    <p><span>QQ：</span>https://y.qq.com/n/yqq/song/<b>002B2EAA3brD5b</b>.html</p>
+                    <p><span>酷狗：</span>http://www.kugou.com/song/#hash=<b>08228af3cb404e8a4e7e9871bf543ff6</b></p>
+                    <p><span>酷我：</span>https://www.kuwo.cn/play_detail/<b>175264544</b></p>
+                </blockquote>
+            </section>
+        </div>
+    </section>
 
+    <footer class="footer">
+        <p>仅供学习交流使用，请支持正版音乐</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
     <script src="script.js"></script>
 </body>
