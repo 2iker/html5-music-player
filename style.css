@@ -39,10 +39,9 @@ h3 {
 .search-wrap {
     width: 500px;
     max-width: 100%;
-    margin: 20px auto;
+    margin: 20px 0;
     display: flex;
     gap: 10px;
-    justify-content: center;
 }
 
 .search-input {
