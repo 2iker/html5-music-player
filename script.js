@@ -137,6 +137,9 @@ async function loadMore() {
     isLoadMore = true;
     currentPage++;
 
+    // 显示加载中
+    $('#j-more').text('加载中...').css('pointer-events', 'none');
+
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
 
@@ -164,21 +167,18 @@ async function loadMore() {
                 audio: allAudio
             });
 
-            // 更新载入更多按钮状态
+            // 更新按钮状态
             if (data.length < 10) {
-                $('.aplayer-more').text('没有了');
+                $('#j-more').text('没有了').css('pointer-events', 'none');
             } else {
-                $('.aplayer-more').text('载入更多（无法播放请换一个试试）');
+                $('#j-more').text('载入更多（无法播放请换一个试试）').css('pointer-events', 'auto');
             }
-
-            // 重新绑定载入更多事件
-            addLoadMoreButton();
         } else {
-            $('.aplayer-more').text('没有了');
+            $('#j-more').text('没有了').css('pointer-events', 'none');
         }
     } catch (error) {
         console.error('载入更多失败:', error);
-        $('.aplayer-more').text('加载失败，点击重试');
+        $('#j-more').text('加载失败，点击重试').css('pointer-events', 'auto');
     } finally {
         isLoadMore = false;
     }
