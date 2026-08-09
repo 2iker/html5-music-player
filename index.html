@@ -21,10 +21,10 @@
         </header>
 
         <!-- 搜索区域 -->
-        <section id="searchSection" class="search-section">
+        <section id="j-validator" class="search-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜索歌曲、歌手、专辑...">
-                <button id="searchBtn" onclick="searchMusic()">
+                <input type="text" id="j-input" placeholder="搜索歌曲、歌手、专辑...">
+                <button id="j-submit" onclick="searchMusic()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
@@ -34,62 +34,50 @@
         </section>
 
         <!-- 播放器区域 -->
-        <section id="playerSection" class="player-section hidden">
-            <button onclick="backToSearch()" class="btn-back">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="m15 18-6-6 6-6"></path>
-                </svg>
+        <form id="j-main" class="am-form music-main music-panel result-panel" style="display:none;">
+            <a type="button" id="j-back" class="am-btn am-btn-success am-btn-lg am-btn-block am-radius music-back" onclick="backToSearch()">
+                <i class="am-icon-reply am-icon-fw"></i>
                 返回搜索
-            </button>
-
-            <!-- result-grid -->
+            </a>
             <div class="result-grid">
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐地址', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
                     <input id="j-link" class="am-form-field" readonly>
                     <span class="am-input-group-btn">
                         <a id="j-link-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-external-link"></i></a>
                     </span>
                 </div>
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐链接', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-music am-icon-fw"></i></span>
                     <input id="j-src" class="am-form-field" readonly>
                     <span class="am-input-group-btn">
                         <a id="j-src-btn" class="am-btn am-btn-default" target="_blank" rel="noreferrer" title="在新窗口打开音乐链接"><i class="am-icon-download"></i></a>
                     </span>
                 </div>
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐ID', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-list-ol am-icon-fw"></i></span>
                     <input id="j-songid" class="am-form-field" readonly>
                 </div>
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐歌词', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-file-text-o am-icon-fw"></i></span>
                     <input id="j-lrc" class="am-form-field" readonly>
                     <span class="am-input-group-btn">
                         <a id="j-lrc-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-download"></i></a>
                     </span>
                 </div>
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐名称', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-tag am-icon-fw"></i></span>
                     <input id="j-name" class="am-form-field" readonly>
                 </div>
-                <div class="am-input-group am-input-group-sm result-field">
+                <div class="am-input-group am-input-group-sm result-field" data-am-popover="{content: '音乐作者', trigger: 'hover'}">
                     <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
                     <input id="j-author" class="am-form-field" readonly>
                 </div>
             </div>
-
-            <!-- APlayer -->
-            <div id="aplayer"></div>
-
-            <!-- 载入更多 -->
-            <button id="loadMoreBtn" class="btn-load-more" onclick="loadMore()">
-                <span>载入更多</span>
-            </button>
-
-            <!-- 提示信息 -->
-            <div id="notice" class="notice hidden"></div>
-        </section>
+            <div id="j-show" class="player-wrap">
+                <div id="j-player" class="aplayer"></div>
+            </div>
+        </form>
 
         <!-- 底部信息 -->
         <footer class="footer">

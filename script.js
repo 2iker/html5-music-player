@@ -6,11 +6,10 @@ let playerList = [];
 let songsList = [];
 let searchKeyword = '';
 let currentPage = 1;
-let isLoadMore = false;
 
 // 搜索音乐
 async function searchMusic() {
-    const keyword = document.getElementById('searchInput').value.trim();
+    const keyword = document.getElementById('j-input').value.trim();
     if (!keyword) {
         alert('请输入搜索内容');
         return;
@@ -19,8 +18,8 @@ async function searchMusic() {
     searchKeyword = keyword;
     currentPage = 1;
 
-    const searchBtn = document.getElementById('searchBtn');
-    searchBtn.innerHTML = '<span class="loading"></span>';
+    const searchBtn = document.getElementById('j-submit');
+    searchBtn.innerHTML = '<i class="am-icon-spinner am-icon-fw am-icon-spin"></i>';
     searchBtn.disabled = true;
 
     try {
@@ -34,8 +33,8 @@ async function searchMusic() {
             createPlayer(data);
 
             // 切换界面
-            document.getElementById('searchSection').classList.add('hidden');
-            document.getElementById('playerSection').classList.remove('hidden');
+            document.getElementById('j-validator').style.display = 'none';
+            document.getElementById('j-main').style.display = 'block';
         } else {
             alert('未找到相关歌曲');
         }
@@ -43,7 +42,7 @@ async function searchMusic() {
         console.error('搜索失败:', error);
         alert('搜索失败，请重试');
     } finally {
-        searchBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>`;
+        searchBtn.innerHTML = '<i class="am-icon-bolt am-icon-fw"></i>';
         searchBtn.disabled = false;
     }
 }
@@ -64,7 +63,7 @@ function createPlayer(songs) {
 
     // 创建新播放器
     player = new APlayer({
-        container: document.getElementById('aplayer'),
+        container: document.getElementById('j-player'),
         mini: false,
         autoplay: true,
         lrcType: 1,
@@ -100,7 +99,7 @@ function createPlayer(songs) {
     player.on('error', function() {
         errorCount++;
         if (errorCount <= 3) {
-            showNotice('该歌曲暂时无法播放，正在播放下一首');
+            alert('该歌曲暂时无法播放，正在播放下一首');
         }
         player.skipForward();
         setTimeout(() => player.play(), 300);
@@ -150,80 +149,15 @@ function convertToPlayerList(songs) {
     });
 }
 
-// 载入更多
-async function loadMore() {
-    if (isLoadMore) return;
-    isLoadMore = true;
-    currentPage++;
-
-    const btn = document.getElementById('loadMoreBtn');
-    btn.textContent = '加载中...';
-    btn.disabled = true;
-
-    try {
-        const data = await fetchSongs(searchKeyword, currentPage);
-
-        if (data && data.length > 0) {
-            songsList = songsList.concat(data);
-            const newMusicList = convertToPlayerList(data);
-
-            // 使用APlayer的add方法添加歌曲
-            newMusicList.forEach(music => {
-                player.list.add(music);
-            });
-
-            if (data.length < 10) {
-                btn.textContent = '没有更多了';
-                btn.disabled = true;
-            } else {
-                btn.textContent = '载入更多';
-                btn.disabled = false;
-            }
-        } else {
-            btn.textContent = '没有更多了';
-            btn.disabled = true;
-        }
-    } catch (error) {
-        console.error('加载失败:', error);
-        btn.textContent = '加载失败，点击重试';
-        btn.disabled = false;
-    } finally {
-        isLoadMore = false;
-    }
-}
-
 // 返回搜索
 function backToSearch() {
     if (player) player.pause();
-    document.getElementById('searchSection').classList.remove('hidden');
-    document.getElementById('playerSection').classList.add('hidden');
-}
-
-// 复制链接
-function copyUrl(url) {
-    navigator.clipboard.writeText(url).then(() => {
-        showNotice('链接已复制');
-    }).catch(() => {
-        const input = document.createElement('input');
-        input.value = url;
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand('copy');
-        document.body.removeChild(input);
-        showNotice('链接已复制');
-    });
-}
-
-// 显示提示
-function showNotice(text) {
-    const notice = document.getElementById('notice');
-    notice.textContent = text;
-    notice.classList.remove('hidden');
-    setTimeout(() => notice.classList.add('hidden'), 2000);
+    document.getElementById('j-validator').style.display = 'block';
+    document.getElementById('j-main').style.display = 'none';
 }
 
 // 回车搜索
-document.getElementById('searchInput').addEventListener('keypress', e => {
+document.getElementById('j-input').addEventListener('keypress', e => {
     if (e.key === 'Enter') {
         e.preventDefault();
         searchMusic();
