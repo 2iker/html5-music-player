@@ -227,7 +227,7 @@ body {
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-/* 结果网格 */
+/* result-grid - 保持原样式 */
 .result-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -235,50 +235,23 @@ body {
     margin-bottom: 20px;
 }
 
-.meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.result-field {
+    margin: 0;
 }
 
-.meta-label {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.4);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.result-field .am-input-group {
+    width: 100%;
 }
 
-.meta-value-box {
-    display: flex;
-    align-items: center;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    min-height: 40px;
+.result-field .am-input-group-label {
+    width: 35px;
+    min-width: 35px;
+    text-align: center;
 }
 
-.meta-text {
+.result-field .am-form-field {
+    height: 32px;
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
-    word-break: break-all;
-}
-
-.meta-link {
-    color: #818cf8;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-.meta-link:hover {
-    text-decoration: underline;
 }
 
 /* APlayer - 保持默认样式 */

@@ -52,16 +52,17 @@ async function searchMusic() {
 function createPlayer(songs) {
     const firstSong = songs[0];
     const artists = firstSong.ar ? firstSong.ar.map(a => a.name).join('/') : '未知';
+    const audioUrl = `https://music.163.com/song/media/outer/url?id=${firstSong.id}.mp3`;
 
     // 更新歌曲信息
-    updateSongInfo(firstSong, artists);
+    updateSongInfo(firstSong, artists, audioUrl);
 
     // 销毁旧播放器
     if (player) {
         player.destroy();
     }
 
-    // 创建新播放器（使用所有歌曲）
+    // 创建新播放器
     player = new APlayer({
         container: document.getElementById('aplayer'),
         mini: false,
@@ -79,7 +80,8 @@ function createPlayer(songs) {
         if (data.index >= 0 && data.index < songsList.length) {
             const song = songsList[data.index];
             const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-            updateSongInfo(song, artists);
+            const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+            updateSongInfo(song, artists, audioUrl);
         }
     });
 
@@ -88,7 +90,8 @@ function createPlayer(songs) {
         if (index >= 0 && index < songsList.length) {
             const song = songsList[index];
             const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
-            updateSongInfo(song, artists);
+            const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
+            updateSongInfo(song, artists, audioUrl);
         }
     });
 
@@ -107,16 +110,14 @@ function createPlayer(songs) {
 }
 
 // 更新歌曲信息
-function updateSongInfo(song, artists) {
-    const audioUrl = `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`;
-
-    document.getElementById('songTitle').textContent = song.name;
-    document.getElementById('songArtist').textContent = artists;
-    document.getElementById('songId').textContent = song.id;
-    document.getElementById('songLink').href = `https://music.163.com/#/song?id=${song.id}`;
-    document.getElementById('songUrl').value = audioUrl;
-    document.getElementById('downloadBtn').href = audioUrl;
-    document.getElementById('downloadBtn').download = `${song.name} - ${artists}.mp3`;
+function updateSongInfo(song, artists, audioUrl) {
+    document.getElementById('j-link').value = `https://music.163.com/#/song?id=${song.id}`;
+    document.getElementById('j-link-btn').href = `https://music.163.com/#/song?id=${song.id}`;
+    document.getElementById('j-src').value = audioUrl;
+    document.getElementById('j-src-btn').href = audioUrl;
+    document.getElementById('j-songid').value = song.id;
+    document.getElementById('j-name').value = song.name;
+    document.getElementById('j-author').value = artists;
 }
 
 // 获取歌曲列表
