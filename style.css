@@ -150,6 +150,23 @@ body {
     margin-top: 20px;
 }
 
+.aplayer-more {
+    display: none;
+    text-align: center;
+    padding: 12px 20px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+.aplayer-more:hover {
+    opacity: 0.9;
+}
+
 .music-tips {
     background: white;
     border-radius: 15px;
