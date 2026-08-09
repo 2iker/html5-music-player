@@ -101,7 +101,17 @@ h1 {
 }
 
 .search-btn.loading svg {
-    animation: search-spin 1s linear infinite;
+    display: none;
+}
+
+.search-btn.loading::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(232, 234, 237, .3);
+    border-top-color: #e8eaed;
+    border-radius: 50%;
+    animation: search-spin .8s linear infinite;
 }
 
 @keyframes search-spin {
