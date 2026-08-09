@@ -104,9 +104,15 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* APlayer - 保留原生样式 */
+/* APlayer - 保留原生样式（仅去掉默认margin与上方网格对齐） */
 .player-wrap {
     margin-top: 20px;
+    width: 100%;
+}
+
+.player-wrap .aplayer {
+    margin: 0;
+    width: 100%;
 }
 
 /* 载入更多按钮 */
