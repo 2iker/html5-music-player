@@ -83,22 +83,28 @@ async function searchMusic() {
                 audio: musicList
             });
 
-            // 监听歌曲切换事件
-            player.on('play', function() {
-                var index = player.playIndex;
-                if (index >= 0 && index < songsList.length) {
-                    var song = songsList[index];
-                    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-                    var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
-                    
-                    // 更新歌曲信息
-                    $('#j-link').val('https://music.163.com/#/song?id=' + song.id);
-                    $('#j-link-btn').attr('href', 'https://music.163.com/#/song?id=' + song.id);
-                    $('#j-src').val(audioUrl);
-                    $('#j-src-btn').attr('href', audioUrl);
-                    $('#j-songid').val(song.id);
-                    $('#j-name').val(song.name);
-                    $('#j-author').val(artists);
+            // 记录当前播放索引
+            var currentPlayIndex = 0;
+
+            // 监听歌曲切换
+            player.on('timeupdate', function() {
+                var newIndex = player.playIndex;
+                if (newIndex !== currentPlayIndex) {
+                    currentPlayIndex = newIndex;
+                    if (newIndex >= 0 && newIndex < songsList.length) {
+                        var song = songsList[newIndex];
+                        var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+                        var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
+                        
+                        // 更新歌曲信息
+                        $('#j-link').val('https://music.163.com/#/song?id=' + song.id);
+                        $('#j-link-btn').attr('href', 'https://music.163.com/#/song?id=' + song.id);
+                        $('#j-src').val(audioUrl);
+                        $('#j-src-btn').attr('href', audioUrl);
+                        $('#j-songid').val(song.id);
+                        $('#j-name').val(song.name);
+                        $('#j-author').val(artists);
+                    }
                 }
             });
 
