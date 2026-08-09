@@ -141,7 +141,8 @@ async function loadMore() {
     $('#j-more').text('加载中...').css('pointer-events', 'none');
 
     // 保存当前滚动位置
-    var scrollPos = $('.aplayer-list').scrollTop();
+    var list = $('.aplayer-list')[0];
+    var scrollPos = list ? list.scrollTop : 0;
 
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
@@ -155,7 +156,7 @@ async function loadMore() {
                 var song = data[i];
                 var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
 
-                // 构建li元素，与APlayer原生格式一致
+                // 构建li元素
                 var li = $('<li>' +
                     '<span class="aplayer-list-cur" style="background-color: rgb(14, 144, 210);"></span>' +
                     '<span class="aplayer-list-index">' + (startIndex + i + 1) + '</span>' +
@@ -175,10 +176,12 @@ async function loadMore() {
                 });
             }
 
-            // 恢复滚动位置
-            setTimeout(function() {
-                $('.aplayer-list').scrollTop(scrollPos);
-            }, 50);
+            // 使用requestAnimationFrame恢复滚动位置
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    list.scrollTop = scrollPos;
+                });
+            });
 
             // 更新按钮状态
             if (data.length < 10) {
