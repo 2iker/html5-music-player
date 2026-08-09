@@ -97,6 +97,13 @@ h1 {
     margin-bottom: 16px;
 }
 
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
 /* APlayer - 保留原生样式 */
 .player-wrap {
     margin-top: 20px;
@@ -146,5 +153,8 @@ h1 {
     .search-btn {
         border-radius: 24px;
         margin-top: 8px;
+    }
+    .result-grid {
+        grid-template-columns: 1fr;
     }
 }
