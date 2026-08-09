@@ -186,6 +186,8 @@ h1 {
 .result-grid .am-input-group,
 .result-field.am-input-group {
     width: 100%;
+    display: flex;
+    align-items: stretch;
     background: #191a1c;
     border: 1px solid #4a5568;
     border-radius: 8px;
@@ -198,6 +200,10 @@ h1 {
 }
 
 .result-field .am-input-group-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
     background: transparent;
     border: none;
     border-right: 1px solid #4a5568;
@@ -209,6 +215,9 @@ h1 {
 }
 
 .result-field .am-form-field {
+    flex: 1;
+    min-width: 0;
+    width: auto;
     background: transparent;
     border: none;
     color: #e8eaed;
@@ -223,17 +232,25 @@ h1 {
 }
 
 .result-field .am-input-group-btn {
+    display: flex;
+    align-items: stretch;
+    width: auto;
     border-left: 1px solid #4a5568;
 }
 
 .result-field .am-input-group-btn .am-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
     background: transparent;
     border: none;
     color: #8b9096;
-    height: auto;
-    padding: 6px 10px;
+    padding: 0 10px;
     font-size: 14px;
     line-height: 1;
+    border-radius: 0 7px 7px 0;
 }
 
 .result-field .am-input-group-btn .am-btn:hover {
@@ -424,7 +441,7 @@ h1 {
     }
 
     .result-field .am-input-group-btn .am-btn {
-        padding: 6px 8px;
+        padding: 0 8px;
     }
 
     .load-more-btn {

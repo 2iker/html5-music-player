@@ -108,24 +108,40 @@ async function getLyric(id) {
 // 获取歌曲列表
 async function fetchSongs(keyword, page) {
     const url = `${API_BASE}/cloudsearch?keywords=${encodeURIComponent(keyword)}&limit=10&type=1&offset=${(page - 1) * 10}`;
-    const response = await fetch(url);
-    const data = await response.json();
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
 
-    if (data.body && data.body.result && data.body.result.songs) {
-        return data.body.result.songs;
-    } else if (data.result && data.result.songs) {
-        return data.result.songs;
+    try {
+        const response = await fetch(url, { signal: controller.signal });
+        const data = await response.json();
+
+        if (data.body && data.body.result && data.body.result.songs) {
+            return data.body.result.songs;
+        } else if (data.result && data.result.songs) {
+            return data.result.songs;
+        }
+        return [];
+    } finally {
+        clearTimeout(timer);
     }
-    return [];
 }
 
 // 转换为APlayer格式
 async function convertToPlayerList(songs) {
+    const withTimeout = (promise, ms) =>
+        Promise.race([
+            promise,
+            new Promise(resolve => setTimeout(() => resolve(''), ms))
+        ]);
+
     const lrcResults = await Promise.all(songs.map(song =>
-        fetch(`${API_BASE}/lyric?id=${song.id}`)
-            .then(res => res.json())
-            .then(data => (data.lrc && data.lrc.lyric) ? data.lrc.lyric : '')
-            .catch(() => '')
+        withTimeout(
+            fetch(`${API_BASE}/lyric?id=${song.id}`)
+                .then(res => res.json())
+                .then(data => (data.lrc && data.lrc.lyric) ? data.lrc.lyric : '')
+                .catch(() => ''),
+            8000
+        )
     ));
 
     return songs.map((song, i) => {
