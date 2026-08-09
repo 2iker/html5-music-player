@@ -13,6 +13,7 @@ body {
     background: #191a1c;
     color: #e8eaed;
     min-height: 100vh;
+    padding-bottom: 48px;
 }
 
 /* Landing页面 */
@@ -402,5 +403,9 @@ h1 {
     .site-footer {
         font-size: 11px;
         padding: 6px 12px;
+    }
+
+    body {
+        padding-bottom: 44px;
     }
 }
