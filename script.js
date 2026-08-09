@@ -4,7 +4,6 @@ const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 var player = null;
 var playerList = [];
 var searchKeyword = '';
-var searchType = 'netease';
 var currentPage = 1;
 var isLoadMore = false;
 
@@ -43,53 +42,25 @@ async function searchMusic() {
         return;
     }
 
-    searchType = $('input[name="music_type"]:checked').val();
     currentPage = 1;
     $('#j-submit').text('搜索中...').prop('disabled', true);
 
     try {
-        var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(searchKeyword) + '&limit=10&type=1';
-        console.log('请求URL:', url);
+        var data = await fetchSongs(searchKeyword, currentPage);
 
-        var response = await fetch(url);
-        var data = await response.json();
-        console.log('返回数据:', data);
-
-        // 解析歌曲列表
-        var songs = null;
-        if (data.body && data.body.result && data.body.result.songs) {
-            songs = data.body.result.songs;
-        } else if (data.result && data.result.songs) {
-            songs = data.result.songs;
-        }
-
-        if (songs && songs.length > 0) {
+        if (data && data.length > 0) {
             // 获取歌词
-            var lyric = await getLyric(songs[0].id);
+            var lyric = await getLyric(data[0].id);
 
             // 转换为APlayer格式
-            playerList = [];
-            for (var i = 0; i < songs.length; i++) {
-                var song = songs[i];
-                var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-                var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
-                var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
-
-                playerList.push({
-                    name: song.name,
-                    artist: artists,
-                    url: audioUrl,
-                    cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-                    lrc: lyric
-                });
-            }
+            playerList = convertToPlayerList(data, lyric);
 
             // 显示播放器
             $('#j-validator').hide();
             $('#j-main').show();
 
             // 更新歌曲信息
-            updateSongInfo(songs[0], playerList[0].url, lyric);
+            updateSongInfo(data[0], playerList[0].url, lyric);
 
             // 销毁旧播放器
             if (player) {
@@ -121,6 +92,43 @@ async function searchMusic() {
     }
 }
 
+// 获取歌曲列表
+async function fetchSongs(keyword, page) {
+    var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(keyword) + '&limit=10&type=1&offset=' + ((page - 1) * 10);
+    console.log('请求URL:', url);
+
+    var response = await fetch(url);
+    var data = await response.json();
+    console.log('返回数据:', data);
+
+    if (data.body && data.body.result && data.body.result.songs) {
+        return data.body.result.songs;
+    } else if (data.result && data.result.songs) {
+        return data.result.songs;
+    }
+    return [];
+}
+
+// 转换为APlayer格式
+function convertToPlayerList(songs, lyric) {
+    var list = [];
+    for (var i = 0; i < songs.length; i++) {
+        var song = songs[i];
+        var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+        var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
+        var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
+
+        list.push({
+            name: song.name,
+            artist: artists,
+            url: audioUrl,
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
+            lrc: i === 0 ? lyric : ''
+        });
+    }
+    return list;
+}
+
 // 载入更多
 async function loadMore() {
     if (isLoadMore) return;
@@ -128,46 +136,41 @@ async function loadMore() {
     currentPage++;
 
     try {
-        var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(searchKeyword) + '&limit=10&type=1&offset=' + ((currentPage - 1) * 10);
-        console.log('载入更多URL:', url);
+        var data = await fetchSongs(searchKeyword, currentPage);
 
-        var response = await fetch(url);
-        var data = await response.json();
+        if (data && data.length > 0) {
+            var newMusicList = convertToPlayerList(data, '');
 
-        var songs = null;
-        if (data.body && data.body.result && data.body.result.songs) {
-            songs = data.body.result.songs;
-        } else if (data.result && data.result.songs) {
-            songs = data.result.songs;
-        }
+            // 重新创建播放器，添加新歌曲
+            var allAudio = playerList.concat(newMusicList);
+            playerList = allAudio;
 
-        if (songs && songs.length > 0) {
-            var newMusicList = [];
-            for (var i = 0; i < songs.length; i++) {
-                var song = songs[i];
-                var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
-                var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
-                var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
-
-                newMusicList.push({
-                    name: song.name,
-                    artist: artists,
-                    url: audioUrl,
-                    cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-                    lrc: ''
-                });
+            // 销毁旧播放器
+            if (player) {
+                player.destroy();
             }
 
-            // 添加到播放列表
-            player.addMusic(newMusicList);
-            playerList = playerList.concat(newMusicList);
+            // 创建新播放器
+            player = new APlayer({
+                container: document.getElementById('j-player'),
+                mini: false,
+                autoplay: false,
+                lrcType: 1,
+                mutex: true,
+                preload: 'auto',
+                volume: 0.7,
+                audio: allAudio
+            });
 
             // 更新载入更多按钮状态
-            if (songs.length < 10) {
+            if (data.length < 10) {
                 $('.aplayer-more').text('没有了');
             } else {
                 $('.aplayer-more').text('载入更多（无法播放请换一个试试）');
             }
+
+            // 重新绑定载入更多事件
+            addLoadMoreButton();
         } else {
             $('.aplayer-more').text('没有了');
         }
