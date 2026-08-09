@@ -226,12 +226,12 @@ async function searchMusic2() {
             songsList = data;
             playerList = await convertToPlayerList(data);
 
-            // 创建播放器
-            createPlayer(data);
-
-            // 显示结果面板，隐藏GitHub链接
+            // 先显示结果面板，再创建播放器（APlayer 需要容器可见才能正常初始化）
             document.getElementById('j-main').classList.remove('hidden');
             document.getElementById('githubLink').classList.add('hidden');
+
+            // 创建播放器
+            createPlayer(data);
 
             // 更新载入更多按钮
             document.getElementById('loadMoreBtn').classList.remove('hidden');
