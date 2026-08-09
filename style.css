@@ -97,41 +97,6 @@ h1 {
     margin-bottom: 16px;
 }
 
-.result-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.result-field {
-    margin: 0;
-}
-
-.result-field .am-input-group {
-    width: 100%;
-    background: #2d2d2d;
-    border-radius: 8px;
-    border: 1px solid #444;
-}
-
-.result-field .am-input-group-label {
-    width: 36px;
-    min-width: 36px;
-    text-align: center;
-    background: transparent;
-    border: none;
-    color: #fff;
-}
-
-.result-field .am-form-field {
-    height: 36px;
-    font-size: 13px;
-    background: transparent;
-    border: none;
-    color: #fff;
-}
-
 /* APlayer - 保留原生样式 */
 .player-wrap {
     margin-top: 20px;
@@ -181,8 +146,5 @@ h1 {
     .search-btn {
         border-radius: 24px;
         margin-top: 8px;
-    }
-    .result-grid {
-        grid-template-columns: 1fr;
     }
 }
