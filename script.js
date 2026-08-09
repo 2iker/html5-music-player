@@ -31,6 +31,23 @@ $('#j-back').on('click', function() {
     $('#j-main').hide();
 });
 
+// 获取歌词
+async function getLyric(id) {
+    try {
+        var url = API_BASE + '/lyric?id=' + id;
+        var response = await fetch(url);
+        var data = await response.json();
+
+        if (data.code === 200 && data.lrc && data.lrc.lyric) {
+            return data.lrc.lyric;
+        }
+        return '暂无歌词';
+    } catch (error) {
+        console.error('获取歌词失败:', error);
+        return '暂无歌词';
+    }
+}
+
 // 搜索音乐
 async function searchMusic() {
     var keyword = $.trim($('#j-input').val());
@@ -59,6 +76,9 @@ async function searchMusic() {
         }
 
         if (songs && songs.length > 0) {
+            // 获取歌词
+            var lyric = await getLyric(songs[0].id);
+
             // 转换为APlayer格式
             var musicList = [];
             for (var i = 0; i < songs.length; i++) {
@@ -73,7 +93,7 @@ async function searchMusic() {
                     artist: artists,
                     url: audioUrl,
                     cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-                    lrc: ''
+                    lrc: lyric
                 });
             }
 
@@ -91,6 +111,7 @@ async function searchMusic() {
             $('#j-songid').val(firstSong.id);
             $('#j-name').val(firstSong.name);
             $('#j-author').val(firstArtists);
+            $('#j-lrc').val(lyric.substring(0, 50) + '...');
 
             // 销毁旧播放器
             if (player) {
@@ -102,7 +123,7 @@ async function searchMusic() {
                 container: document.getElementById('j-player'),
                 mini: false,
                 autoplay: true,
-                lrcType: 0,
+                lrcType: 1,
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
