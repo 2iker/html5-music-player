@@ -73,6 +73,7 @@ function createPlayer(songs) {
         mutex: true,
         preload: 'auto',
         volume: 0.7,
+        theme: '#7f9cbf',
         listmaxheight: 9999,
         audio: playerList
     });

@@ -89,7 +89,7 @@ h1 {
     max-width: 600px;
 }
 
-/* j-main - 保持原样式 */
+/* j-main - 深色和谐配色 */
 .music-panel {
     background: #3a3a3a;
     border-radius: 16px;
@@ -104,7 +104,46 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* APlayer - 保留原生样式（仅去掉默认margin与上方网格对齐） */
+.result-field {
+    margin: 0;
+}
+
+.result-field .am-input-group {
+    width: 100%;
+    background: #2d2d2d;
+    border: 1px solid #4a4a4a;
+    border-radius: 8px;
+}
+
+.result-field .am-input-group-label {
+    background: transparent;
+    border: none;
+    color: #a8a8a8;
+}
+
+.result-field .am-form-field {
+    background: transparent;
+    border: none;
+    color: #f5f5f5;
+    font-size: 13px;
+}
+
+.result-field .am-form-field:focus {
+    outline: none;
+}
+
+.result-field .am-input-group-btn .am-btn {
+    background: transparent;
+    border: none;
+    color: #a8a8a8;
+}
+
+.result-field .am-input-group-btn .am-btn:hover {
+    color: #fff;
+    background: #444;
+}
+
+/* APlayer - 深色和谐配色 */
 .player-wrap {
     margin-top: 20px;
     width: 100%;
@@ -113,6 +152,58 @@ h1 {
 .player-wrap .aplayer {
     margin: 0;
     width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.player-wrap .aplayer,
+.player-wrap .aplayer-info {
+    background-color: #3a3a3a;
+}
+
+.player-wrap .aplayer .aplayer-title,
+.player-wrap .aplayer-list ol li {
+    color: #f5f5f5;
+}
+
+.player-wrap .aplayer .aplayer-author,
+.player-wrap .aplayer .aplayer-time {
+    color: #a8a8a8;
+}
+
+.player-wrap .aplayer-list {
+    background-color: #333;
+    border-top: 1px solid #4a4a4a;
+}
+
+.player-wrap .aplayer-list ol li {
+    border-bottom-color: #444;
+}
+
+.player-wrap .aplayer-list ol li.aplayer-list-light {
+    background-color: #454545;
+}
+
+.player-wrap .aplayer-lrc-contents p {
+    color: #a8a8a8;
+}
+
+.player-wrap .aplayer-lrc-contents p.aplayer-lrc-current {
+    color: #f5f5f5;
+}
+
+.player-wrap .aplayer-list ol {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #333;
+}
+
+.player-wrap .aplayer-list ol::-webkit-scrollbar {
+    width: 6px;
+}
+
+.player-wrap .aplayer-list ol::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
 }
 
 /* 载入更多按钮 */
