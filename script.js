@@ -142,7 +142,6 @@ async function loadMore() {
 
     // 保存当前滚动位置
     var scrollPos = $('.aplayer-list').scrollTop();
-    var playerHeight = $('.aplayer-list').height();
 
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
@@ -150,38 +149,16 @@ async function loadMore() {
         if (data && data.length > 0) {
             var newMusicList = convertToPlayerList(data, '');
 
-            // 重新创建播放器，添加新歌曲
-            var allAudio = playerList.concat(newMusicList);
-            playerList = allAudio;
-
-            // 销毁旧播放器
-            if (player) {
-                player.destroy();
+            // 添加到播放列表
+            for (var i = 0; i < newMusicList.length; i++) {
+                playerList.push(newMusicList[i]);
+                player.addMusic(newMusicList[i]);
             }
 
-            // 创建新播放器
-            player = new APlayer({
-                container: document.getElementById('j-player'),
-                mini: false,
-                autoplay: false,
-                lrcType: 1,
-                mutex: true,
-                preload: 'auto',
-                volume: 0.7,
-                audio: allAudio
-            });
-
-            // 使用多次尝试恢复滚动位置
-            var restoreScroll = function() {
-                var list = $('.aplayer-list');
-                if (list.length && list[0].scrollHeight > playerHeight) {
-                    list.scrollTop(scrollPos);
-                }
-            };
-
-            setTimeout(restoreScroll, 50);
-            setTimeout(restoreScroll, 150);
-            setTimeout(restoreScroll, 300);
+            // 恢复滚动位置
+            setTimeout(function() {
+                $('.aplayer-list').scrollTop(scrollPos);
+            }, 100);
 
             // 更新按钮状态
             if (data.length < 10) {
