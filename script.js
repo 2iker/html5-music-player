@@ -38,13 +38,12 @@ async function searchMusic() {
         return;
     }
 
-    var type = $('input[name="music_type"]:checked').val();
-
     // 显示加载状态
     $('.music-submit').text('搜索中...').prop('disabled', true);
 
     try {
-        var url = API_BASE + '/search?keywords=' + encodeURIComponent(keyword) + '&limit=10';
+        // 使用不同的API端点
+        var url = API_BASE + '/cloudsearch?keywords=' + encodeURIComponent(keyword) + '&limit=10&type=1';
         console.log('请求URL:', url);
 
         var response = await fetch(url);
@@ -53,10 +52,20 @@ async function searchMusic() {
         var data = await response.json();
         console.log('返回数据:', data);
 
-        if (data.code === 200 && data.result && data.result.songs && data.result.songs.length > 0) {
+        // 尝试不同的数据结构
+        var songs = null;
+        if (data.result && data.result.songs) {
+            songs = data.result.songs;
+        } else if (data.body && data.body.result && data.body.result.songs) {
+            songs = data.body.result.songs;
+        } else if (data.data && data.data.songs) {
+            songs = data.data.songs;
+        }
+
+        if (songs && songs.length > 0) {
             $('#searchForm').hide();
             $('#resultForm').show();
-            playSong(data.result.songs[0]);
+            playSong(songs[0]);
         } else {
             alert('未找到相关歌曲，请换个关键词试试');
         }
@@ -88,9 +97,11 @@ async function getSongUrl(id) {
 
 // 播放歌曲
 async function playSong(song) {
-    var artists = song.artists ? song.artists.map(function(a) { return a.name; }).join('/') : '未知';
-    var album = song.album ? song.album.name : '';
-    var picUrl = song.album && song.album.picUrl ? song.album.picUrl : '';
+    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : 
+                  (song.artists ? song.artists.map(function(a) { return a.name; }).join('/') : '未知');
+    var album = song.al ? song.al.name : (song.album ? song.album.name : '');
+    var picUrl = song.al && song.al.picUrl ? song.al.picUrl : 
+                 (song.album && song.album.picUrl ? song.album.picUrl : '');
 
     // 获取播放链接
     var audioUrl = await getSongUrl(song.id);
