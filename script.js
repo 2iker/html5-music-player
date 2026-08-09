@@ -3,6 +3,7 @@ const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
 var player = null;
 var playerList = [];
+var songsList = [];  // 存储所有歌曲数据
 var searchKeyword = '';
 var currentPage = 1;
 var isLoadMore = false;
@@ -49,6 +50,9 @@ async function searchMusic() {
         var data = await fetchSongs(searchKeyword, currentPage);
 
         if (data && data.length > 0) {
+            // 保存歌曲数据
+            songsList = data;
+
             // 获取歌词
             var lyric = await getLyric(data[0].id);
 
@@ -76,7 +80,26 @@ async function searchMusic() {
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
-                audio: playerList
+                audio: musicList
+            });
+
+            // 监听歌曲切换事件
+            player.on('play', function() {
+                var index = player.playIndex;
+                if (index >= 0 && index < songsList.length) {
+                    var song = songsList[index];
+                    var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
+                    var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
+                    
+                    // 更新歌曲信息
+                    $('#j-link').val('https://music.163.com/#/song?id=' + song.id);
+                    $('#j-link-btn').attr('href', 'https://music.163.com/#/song?id=' + song.id);
+                    $('#j-src').val(audioUrl);
+                    $('#j-src-btn').attr('href', audioUrl);
+                    $('#j-songid').val(song.id);
+                    $('#j-name').val(song.name);
+                    $('#j-author').val(artists);
+                }
             });
 
             // 添加载入更多按钮
@@ -148,6 +171,9 @@ async function loadMore() {
         var data = await fetchSongs(searchKeyword, currentPage);
 
         if (data && data.length > 0) {
+            // 保存歌曲数据
+            songsList = songsList.concat(data);
+
             // 直接在ol中添加新的li
             var ol = $('.aplayer-list ol');
             var startIndex = playerList.length;
