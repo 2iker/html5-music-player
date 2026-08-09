@@ -89,16 +89,16 @@ async function searchMusic() {
             player.on('error', function() {
                 errorCount++;
                 if (errorCount <= 3) {
-                    // 使用页面内提示代替alert
-                    var notice = $('<div class="aplayer-notice" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#ff6b6b;color:white;padding:15px 30px;border-radius:8px;z-index:9999;font-size:14px;box-shadow:0 4px 15px rgba(0,0,0,0.3);">该歌曲暂时无法播放（可能是VIP歌曲），正在尝试下一首...</div>');
-                    $('body').append(notice);
-                    setTimeout(function() { notice.remove(); }, 3000);
+                    // 在播放器下方显示小提示
+                    var notice = $('<div id="play-notice" style="text-align:center;padding:8px;background:#fff3cd;color:#856404;border-radius:6px;margin-top:10px;font-size:13px;border:1px solid #ffeeba;">该歌曲暂时无法播放，正在播放下一首</div>');
+                    $('#j-more').before(notice);
+                    setTimeout(function() { notice.remove(); }, 2000);
                 }
                 // 切换到下一首并播放
                 player.skipForward();
                 setTimeout(function() {
                     player.play();
-                }, 500);
+                }, 300);
             });
 
             // 播放成功时重置错误计数
