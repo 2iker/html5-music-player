@@ -28,7 +28,7 @@ body {
 .logo-icon {
     font-size: 48px;
     line-height: 1;
-    margin: 0 0 16px;
+    margin: 0 0 8px;
     filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
 }
 
@@ -36,14 +36,14 @@ h1 {
     font-size: 28px;
     font-weight: 600;
     color: #f2f4f6;
-    margin: 0 0 16px;
+    margin: 0 0 8px;
     letter-spacing: .5px;
 }
 
 .subtitle {
     color: #999;
     font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
 }
 
 /* 搜索框 */
