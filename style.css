@@ -142,6 +142,44 @@ h1 {
     height: auto !important;
 }
 
+/* APlayer黑夜模式 */
+#j-player .aplayer {
+    background-color: #3a3a3a !important;
+}
+
+#j-player .aplayer-info {
+    background-color: #3a3a3a !important;
+}
+
+#j-player .aplayer-list {
+    background-color: #2d2d2d !important;
+}
+
+#j-player .aplayer-list ol li {
+    border-bottom-color: #444 !important;
+}
+
+#j-player .aplayer-list ol li.aplayer-list-light {
+    background-color: #444 !important;
+}
+
+#j-player .aplayer-music .aplayer-title,
+#j-player .aplayer-music .aplayer-author {
+    color: #fff !important;
+}
+
+#j-player .aplayer-lrc-contents p {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+#j-player .aplayer-lrc-contents p.aplayer-lrc-current {
+    color: #fff !important;
+}
+
+#j-player .aplayer-time {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
 /* 载入更多按钮 */
 .load-more-btn {
     width: 100%;
