@@ -85,9 +85,18 @@ async function searchMusic() {
             });
 
             // 监听音频加载错误
+            var errorCount = 0;
             player.on('error', function() {
-                console.warn('音频加载失败，尝试下一首');
+                errorCount++;
+                if (errorCount <= 3) {
+                    alert('该歌曲暂时无法播放（可能是VIP歌曲），正在尝试下一首...');
+                }
                 player.skipForward();
+            });
+
+            // 播放成功时重置错误计数
+            player.on('canplay', function() {
+                errorCount = 0;
             });
 
             // 更新歌曲信息的函数
