@@ -6,8 +6,6 @@
     <title>Music - 免费音乐搜索</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Vue 3 -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <!-- AmazeUI -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/amazeui@2.7.2/dist/css/amazeui.min.css">
     <!-- APlayer -->
@@ -17,111 +15,103 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
-    <div id="app">
-        <!-- 头部 -->
-        <header class="text-center py-12">
-            <div class="flex items-center justify-center gap-3 mb-2">
-                <span class="text-5xl">🎵</span>
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Music</h1>
-            </div>
-            <p class="text-gray-400 text-sm">免费音乐搜索 · 在线播放 · 一键下载</p>
-        </header>
+    <!-- 头部 -->
+    <header class="text-center py-12">
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <span class="text-5xl">🎵</span>
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Music</h1>
+        </div>
+        <p class="text-gray-400 text-sm">免费音乐搜索 · 在线播放 · 一键下载</p>
+    </header>
 
-        <!-- 搜索区域 -->
-        <section class="max-w-xl mx-auto px-4 mb-8">
-            <div class="flex gap-2">
-                <input 
-                    v-model="searchKeyword" 
-                    @keyup.enter="search"
-                    type="text" 
-                    placeholder="搜索歌曲、歌手、专辑..."
-                    class="flex-1 px-5 py-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
-                >
-                <button 
-                    @click="search" 
-                    :disabled="loading"
-                    class="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all disabled:opacity-50"
-                >
-                    <span v-if="loading">搜索中...</span>
-                    <span v-else>搜索</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- 结果区域 -->
-        <section v-show="showPlayer" class="max-w-3xl mx-auto px-4">
-            <!-- 返回按钮 -->
-            <button 
-                @click="backToSearch"
-                class="mb-5 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-gray-300 text-sm transition-all inline-flex items-center gap-2"
+    <!-- 搜索区域 -->
+    <section id="searchSection" class="max-w-xl mx-auto px-4 mb-8">
+        <div class="flex gap-2">
+            <input 
+                id="searchInput"
+                type="text" 
+                placeholder="搜索歌曲、歌手、专辑..."
+                class="flex-1 px-5 py-3.5 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
             >
-                <span>←</span> 返回搜索
-            </button>
-
-            <!-- j-main 保持原样式 -->
-            <form id="j-main" class="am-form music-main music-panel result-panel">
-                <div class="result-grid">
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
-                        <input id="j-link" class="am-form-field" readonly>
-                        <span class="am-input-group-btn">
-                            <a id="j-link-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-external-link"></i></a>
-                        </span>
-                    </div>
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-music am-icon-fw"></i></span>
-                        <input id="j-src" class="am-form-field" readonly>
-                        <span class="am-input-group-btn">
-                            <a id="j-src-btn" class="am-btn am-btn-default" target="_blank" rel="noreferrer"><i class="am-icon-download"></i></a>
-                        </span>
-                    </div>
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-list-ol am-icon-fw"></i></span>
-                        <input id="j-songid" class="am-form-field" readonly>
-                    </div>
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-file-text-o am-icon-fw"></i></span>
-                        <input id="j-lrc" class="am-form-field" readonly>
-                        <span class="am-input-group-btn">
-                            <a id="j-lrc-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-download"></i></a>
-                        </span>
-                    </div>
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-tag am-icon-fw"></i></span>
-                        <input id="j-name" class="am-form-field" readonly>
-                    </div>
-                    <div class="am-input-group am-input-group-sm result-field">
-                        <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
-                        <input id="j-author" class="am-form-field" readonly>
-                    </div>
-                </div>
-                <div class="player-wrap">
-                    <div id="j-player" class="aplayer"></div>
-                </div>
-            </form>
-
-            <!-- 载入更多 -->
             <button 
-                v-show="showLoadMore"
-                @click="loadMore"
-                :disabled="loadingMore"
-                class="w-full mt-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-gray-300 font-medium transition-all disabled:opacity-50"
+                id="searchBtn"
+                onclick="searchMusic()"
+                class="px-6 py-3.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all"
             >
-                <span v-if="loadingMore">加载中...</span>
-                <span v-else>{{ noMore ? '没有更多了' : '载入更多' }}</span>
+                搜索
             </button>
+        </div>
+    </section>
 
-            <!-- 提示信息 -->
-            <div v-show="notice" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 px-5 py-3 bg-red-500/90 text-white rounded-lg text-sm z-50">
-                {{ notice }}
+    <!-- 结果区域 -->
+    <section id="playerSection" class="max-w-3xl mx-auto px-4 hidden">
+        <!-- 返回按钮 -->
+        <button 
+            onclick="backToSearch()"
+            class="mb-5 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-gray-300 text-sm transition-all inline-flex items-center gap-2"
+        >
+            <span>←</span> 返回搜索
+        </button>
+
+        <!-- j-main 保持原样式 -->
+        <form id="j-main" class="am-form music-main music-panel result-panel">
+            <div class="result-grid">
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-link am-icon-fw"></i></span>
+                    <input id="j-link" class="am-form-field" readonly>
+                    <span class="am-input-group-btn">
+                        <a id="j-link-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-external-link"></i></a>
+                    </span>
+                </div>
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-music am-icon-fw"></i></span>
+                    <input id="j-src" class="am-form-field" readonly>
+                    <span class="am-input-group-btn">
+                        <a id="j-src-btn" class="am-btn am-btn-default" target="_blank" rel="noreferrer"><i class="am-icon-download"></i></a>
+                    </span>
+                </div>
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-list-ol am-icon-fw"></i></span>
+                    <input id="j-songid" class="am-form-field" readonly>
+                </div>
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-file-text-o am-icon-fw"></i></span>
+                    <input id="j-lrc" class="am-form-field" readonly>
+                    <span class="am-input-group-btn">
+                        <a id="j-lrc-btn" class="am-btn am-btn-default" target="_blank"><i class="am-icon-download"></i></a>
+                    </span>
+                </div>
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-tag am-icon-fw"></i></span>
+                    <input id="j-name" class="am-form-field" readonly>
+                </div>
+                <div class="am-input-group am-input-group-sm result-field">
+                    <span class="am-input-group-label"><i class="am-icon-user am-icon-fw"></i></span>
+                    <input id="j-author" class="am-form-field" readonly>
+                </div>
             </div>
-        </section>
+            <div class="player-wrap">
+                <div id="j-player" class="aplayer"></div>
+            </div>
+        </form>
 
-        <!-- 底部 -->
-        <footer class="text-center py-10 text-gray-500 text-xs">
-            <p>仅供学习交流使用，请支持正版音乐</p>
-        </footer>
-    </div>
+        <!-- 载入更多 -->
+        <button 
+            id="loadMoreBtn"
+            onclick="loadMore()"
+            class="hidden w-full mt-4 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-gray-300 font-medium transition-all"
+        >
+            载入更多
+        </button>
+
+        <!-- 提示信息 -->
+        <div id="notice" class="hidden fixed bottom-24 left-1/2 transform -translate-x-1/2 px-5 py-3 bg-red-500/90 text-white rounded-lg text-sm z-50"></div>
+    </section>
+
+    <!-- 底部 -->
+    <footer class="text-center py-10 text-gray-500 text-xs">
+        <p>仅供学习交流使用，请支持正版音乐</p>
+    </footer>
 
     <!-- jQuery (APlayer需要) -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
