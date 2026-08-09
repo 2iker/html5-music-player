@@ -161,33 +161,26 @@ async function fetchSongs(keyword, page) {
 
 // 转换为APlayer格式
 async function convertToPlayerList(songs) {
-    const list = [];
-    for (const song of songs) {
+    const lrcResults = await Promise.all(songs.map(song =>
+        fetch(`${API_BASE}/lyric?id=${song.id}`)
+            .then(res => res.json())
+            .then(data => (data.lrc && data.lrc.lyric) ? data.lrc.lyric : '')
+            .catch(() => '')
+    ));
+
+    return songs.map((song, i) => {
         const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
         let picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
         if (picUrl.startsWith('http://')) picUrl = picUrl.replace('http://', 'https://');
 
-        // 获取歌词
-        let lrc = '';
-        try {
-            const response = await fetch(`${API_BASE}/lyric?id=${song.id}`);
-            const data = await response.json();
-            if (data.lrc && data.lrc.lyric) {
-                lrc = data.lrc.lyric;
-            }
-        } catch (error) {
-            console.error('获取歌词失败:', error);
-        }
-
-        list.push({
+        return {
             name: song.name,
             artist: artists,
             url: `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`,
             cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-            lrc: lrc
-        });
-    }
-    return list;
+            lrc: lrcResults[i]
+        };
+    });
 }
 
 // 载入更多
