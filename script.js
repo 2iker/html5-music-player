@@ -1,26 +1,6 @@
 // API配置
 const API_BASE = 'https://api-enhanced-two-mu.vercel.app';
 
-// 平台配置
-const platforms = {
-    netease: {
-        name: '网易云音乐',
-        type: 'netease'
-    },
-    qq: {
-        name: 'QQ音乐',
-        type: 'qq'
-    },
-    kugou: {
-        name: '酷狗音乐',
-        type: 'kugou'
-    },
-    kuwo: {
-        name: '酷我音乐',
-        type: 'kuwo'
-    }
-};
-
 let currentPlatform = 'netease';
 
 // 平台切换
@@ -46,14 +26,14 @@ async function searchMusic() {
     resultList.innerHTML = '<div class="loading">搜索中...</div>';
 
     try {
-        const platform = platforms[currentPlatform];
-        const url = `${API_BASE}/api/search?keyword=${encodeURIComponent(keyword)}&type=${platform.type}`;
+        // 使用网易云音乐API搜索
+        const url = `${API_BASE}/search?keywords=${encodeURIComponent(keyword)}&limit=10`;
 
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.code === 200 && data.data && data.data.length > 0) {
-            displayResults(data.data);
+        if (data.code === 200 && data.result && data.result.songs) {
+            displayResults(data.result.songs);
         } else {
             resultList.innerHTML = '<div class="empty">未找到相关歌曲</div>';
         }
@@ -72,42 +52,45 @@ function displayResults(songs) {
         return;
     }
 
-    resultList.innerHTML = songs.map((song, index) => `
+    resultList.innerHTML = songs.map((song, index) => {
+        const artists = song.artists ? song.artists.map(a => a.name).join('/') : '未知';
+        const album = song.album ? song.album.name : '';
+        return `
         <div class="result-item">
             <span class="index">${index + 1}</span>
             <div class="song-info">
                 <h4>${escapeHtml(song.name)} <span class="id">ID: ${song.id}</span></h4>
-                <p>${escapeHtml(song.artist)} ${song.album ? '- ' + escapeHtml(song.album) : ''}</p>
+                <p>${escapeHtml(artists)} ${album ? '- ' + escapeHtml(album) : ''}</p>
             </div>
             <div class="actions">
-                <button class="btn-play" onclick="playSong('${song.url}', '${escapeHtml(song.name)}', '${escapeHtml(song.artist)}')">播放</button>
-                <a class="btn-download" href="${song.url}" download="${escapeHtml(song.name)} - ${escapeHtml(song.artist)}.mp3">下载</a>
-                <button class="btn-copy" onclick="copyUrl('${song.url}')">复制</button>
+                <button class="btn-play" onclick="playSong(${song.id}, '${escapeHtml(song.name)}', '${escapeHtml(artists)}')">播放</button>
+                <button class="btn-copy" onclick="copyUrl('http://music.163.com/song/media/outer/url?id=${song.id}.mp3')">复制</button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // 播放歌曲
-function playSong(url, name, artist) {
-    const platform = platforms[currentPlatform];
-
+async function playSong(id, name, artist) {
     // 显示播放器
     document.getElementById('playerSection').classList.remove('hidden');
     document.getElementById('playerTitle').textContent = name;
-    document.getElementById('playerArtist').textContent = `${artist} - ${platform.name}`;
+    document.getElementById('playerArtist').textContent = `${artist} - 网易云音乐`;
+
+    // 获取歌曲播放链接
+    const audioUrl = `http://music.163.com/song/media/outer/url?id=${id}.mp3`;
 
     // 设置音频
     const audio = document.getElementById('audioPlayer');
-    audio.src = url;
-    audio.play();
+    audio.src = audioUrl;
 
     // 设置下载链接
-    document.getElementById('downloadBtn').href = url;
+    document.getElementById('downloadBtn').href = audioUrl;
     document.getElementById('downloadBtn').download = `${name} - ${artist}.mp3`;
 
     // 设置分享链接
-    document.getElementById('shareLink').value = url;
+    document.getElementById('shareLink').value = audioUrl;
 
     // 滚动到播放器
     document.getElementById('playerSection').scrollIntoView({ behavior: 'smooth' });
