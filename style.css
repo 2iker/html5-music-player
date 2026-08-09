@@ -100,8 +100,8 @@ h1 {
 .result-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 16px;
 }
 
 .result-field {
@@ -145,7 +145,7 @@ h1 {
 
 /* APlayer - 深色和谐配色 */
 .player-wrap {
-    margin-top: 20px;
+    margin-top: 0;
     width: 100%;
 }
 
