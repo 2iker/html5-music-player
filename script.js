@@ -113,6 +113,12 @@ async function searchMusic() {
             $('#j-author').val(firstArtists);
             $('#j-lrc').val(lyric.substring(0, 50) + '...');
 
+            // 生成歌词下载链接
+            var lrcBase64 = btoa(unescape(encodeURIComponent(lyric)));
+            var lrcFileName = firstSong.name + '-' + firstArtists + '.lrc';
+            $('#j-lrc-btn').attr('href', 'data:application/octet-stream;base64,' + lrcBase64);
+            $('#j-lrc-btn').attr('download', lrcFileName);
+
             // 销毁旧播放器
             if (player) {
                 player.destroy();
