@@ -95,6 +95,20 @@ h1 {
     color: #ffffff;
 }
 
+.search-btn.loading {
+    opacity: .6;
+    cursor: wait;
+}
+
+.search-btn.loading svg {
+    animation: search-spin 1s linear infinite;
+}
+
+@keyframes search-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* 结果区域 */
 .player-section {
     width: 100%;

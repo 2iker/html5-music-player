@@ -195,7 +195,7 @@ async function searchMusic2() {
 
     currentPage = 1;
     const searchBtn = document.getElementById('searchBtn2');
-    searchBtn.textContent = '搜索中...';
+    searchBtn.classList.add('loading');
     searchBtn.disabled = true;
 
     try {
@@ -222,7 +222,7 @@ async function searchMusic2() {
         console.error('搜索失败:', error);
         showNotice('搜索失败，请重试');
     } finally {
-        searchBtn.textContent = '搜索';
+        searchBtn.classList.remove('loading');
         searchBtn.disabled = false;
     }
 }
