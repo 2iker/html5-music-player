@@ -140,6 +140,9 @@ async function loadMore() {
     // 显示加载中
     $('#j-more').text('加载中...').css('pointer-events', 'none');
 
+    // 保存当前滚动位置
+    var scrollPos = $('.aplayer-list').scrollTop();
+
     try {
         var data = await fetchSongs(searchKeyword, currentPage);
 
@@ -166,6 +169,11 @@ async function loadMore() {
                 volume: 0.7,
                 audio: allAudio
             });
+
+            // 恢复滚动位置
+            setTimeout(function() {
+                $('.aplayer-list').scrollTop(scrollPos);
+            }, 100);
 
             // 更新按钮状态
             if (data.length < 10) {
