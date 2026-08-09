@@ -150,16 +150,25 @@ body {
     margin-top: 20px;
 }
 
-/* APlayer列表自适应高度，隐藏滚动条 */
+/* APlayer列表自适应高度 */
 #j-player .aplayer-list {
-    max-height: none;
+    overflow: visible;
     height: auto;
-    overflow-y: hidden;
 }
 
 #j-player .aplayer-list ol {
-    max-height: none;
+    overflow: visible;
     height: auto;
+}
+
+/* 隐藏滚动条 */
+#j-player .aplayer-list::-webkit-scrollbar {
+    display: none;
+}
+
+#j-player .aplayer-list {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .aplayer-more {
