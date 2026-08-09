@@ -133,12 +133,17 @@ async function convertToPlayerList(songs) {
         let picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
         if (picUrl.startsWith('http://')) picUrl = picUrl.replace('http://', 'https://');
 
+        const lrc = lrcResults[i];
+        const safeLrc = (lrc && lrc.trim())
+            ? lrc
+            : '[00:00.00]暂无歌词';
+
         return {
             name: song.name,
             artist: artists,
             url: `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`,
             cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
-            lrc: lrcResults[i]
+            lrc: safeLrc
         };
     });
 }
