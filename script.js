@@ -90,7 +90,7 @@ async function searchMusic() {
                 errorCount++;
                 if (errorCount <= 3) {
                     // 在播放器正下方显示小提示
-                    var notice = $('<div id="play-notice" style="text-align:center;padding:8px;background:#fff3cd;color:#856404;border-radius:6px;margin-top:10px;font-size:13px;border:1px solid #ffeeba;">该歌曲暂时无法播放，正在播放下一首</div>');
+                    var notice = $('<div id="play-notice" style="text-align:center;padding:8px;background:#f8d7da;color:#721c24;border-radius:6px;margin-top:10px;font-size:13px;border:1px solid #f5c6cb;">该歌曲暂时无法播放，正在播放下一首</div>');
                     $('#j-player').after(notice);
                     setTimeout(function() { notice.remove(); }, 2000);
                 }
