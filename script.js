@@ -80,7 +80,7 @@ async function searchMusic() {
                 mutex: true,
                 preload: 'auto',
                 volume: 0.7,
-                audio: musicList
+                audio: playerList
             });
 
             // 记录当前播放索引
