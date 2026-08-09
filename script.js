@@ -27,7 +27,7 @@ async function searchMusic() {
 
         if (data && data.length > 0) {
             songsList = data;
-            playerList = convertToPlayerList(data);
+            playerList = await convertToPlayerList(data);
 
             // 创建播放器
             createPlayer(data);
@@ -160,19 +160,34 @@ async function fetchSongs(keyword, page) {
 }
 
 // 转换为APlayer格式
-function convertToPlayerList(songs) {
-    return songs.map(song => {
+async function convertToPlayerList(songs) {
+    const list = [];
+    for (const song of songs) {
         const artists = song.ar ? song.ar.map(a => a.name).join('/') : '未知';
         let picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
         if (picUrl.startsWith('http://')) picUrl = picUrl.replace('http://', 'https://');
 
-        return {
+        // 获取歌词
+        let lrc = '';
+        try {
+            const response = await fetch(`${API_BASE}/lyric?id=${song.id}`);
+            const data = await response.json();
+            if (data.lrc && data.lrc.lyric) {
+                lrc = data.lrc.lyric;
+            }
+        } catch (error) {
+            console.error('获取歌词失败:', error);
+        }
+
+        list.push({
             name: song.name,
             artist: artists,
             url: `https://music.163.com/song/media/outer/url?id=${song.id}.mp3`,
-            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg'
-        };
-    });
+            cover: picUrl || 'https://p1.music.126.net/OdGMEPNgtU3B5F-Gc6yN_A==/109951167657874880.jpg',
+            lrc: lrc
+        });
+    }
+    return list;
 }
 
 // 载入更多
@@ -190,7 +205,7 @@ async function loadMore() {
 
         if (data && data.length > 0) {
             songsList = songsList.concat(data);
-            const newMusicList = convertToPlayerList(data);
+            const newMusicList = await convertToPlayerList(data);
 
             // 使用APlayer的add方法添加歌曲
             newMusicList.forEach(music => {
@@ -242,7 +257,7 @@ async function searchMusic2() {
 
         if (data && data.length > 0) {
             songsList = data;
-            playerList = convertToPlayerList(data);
+            playerList = await convertToPlayerList(data);
 
             // 创建播放器
             createPlayer(data);
