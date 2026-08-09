@@ -156,6 +156,10 @@ function convertToPlayerList(songs, lyric) {
         var song = songs[i];
         var artists = song.ar ? song.ar.map(function(a) { return a.name; }).join('/') : '未知';
         var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
+        // 将http改为https
+        if (picUrl && picUrl.startsWith('http://')) {
+            picUrl = picUrl.replace('http://', 'https://');
+        }
         var audioUrl = 'https://music.163.com/song/media/outer/url?id=' + song.id + '.mp3';
 
         list.push({
@@ -208,6 +212,10 @@ async function loadMore() {
 
                 // 添加到播放列表数据
                 var picUrl = song.al && song.al.picUrl ? song.al.picUrl : '';
+                // 将http改为https
+                if (picUrl && picUrl.startsWith('http://')) {
+                    picUrl = picUrl.replace('http://', 'https://');
+                }
                 playerList.push({
                     name: song.name,
                     artist: artists,
